@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.text-Border-Black{
+    text-shadow:
+    1px 1px 0 black,
+   -1px 1px 0 black,
+    1px -1px 0 black,
+   -1px -1px 0 black;
+}
+
+#editProfile{
+    scrollbar-width: none;
+}
+
+.uploadVideoClass{
+  scrollbar-width: none;
+}

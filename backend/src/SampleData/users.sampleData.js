@@ -1,0 +1,203 @@
+import mongoose from "mongoose";
+
+const objectId = (id) => new mongoose.Types.ObjectId(id);
+
+const users = [
+  {
+    _id: objectId("507f1f77bcf86cd799439001"),
+    userName: "user1",
+    email: "user1@example.com",
+    fullName: "User 1",
+    avatar: "https://example.com/avatar3.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  },
+  {
+    _id: objectId("507f1f77bcf86cd799439002"),
+    userName: "user2",
+    email: "user2@example.com",
+    fullName: "User 2",
+    avatar: "https://example.com/avatar2.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  },
+  {
+    _id: objectId("507f1f77bcf86cd799439003"),
+    userName: "user3",
+    email: "user3@example.com",
+    fullName: "User 3",
+    avatar: "https://example.com/avatar5.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  },
+  {
+    _id: objectId("507f1f77bcf86cd799439004"),
+    userName: "user4",
+    email: "user4@example.com",
+    fullName: "User 4",
+    avatar: "https://example.com/avatar1.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  },
+  {
+    _id: objectId("507f1f77bcf86cd799439005"),
+    userName: "user5",
+    email: "user5@example.com",
+    fullName: "User 5",
+    avatar: "https://example.com/avatar1.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  },
+  {
+    _id: objectId("507f1f77bcf86cd799439006"),
+    userName: "user6",
+    email: "user6@example.com",
+    fullName: "User 6",
+    avatar: "https://example.com/avatar5.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  },
+  {
+    _id: objectId("507f1f77bcf86cd799439007"),
+    userName: "user7",
+    email: "user7@example.com",
+    fullName: "User 7",
+    avatar: "https://example.com/avatar1.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  },
+  {
+    _id: objectId("507f1f77bcf86cd799439008"),
+    userName: "user8",
+    email: "user8@example.com",
+    fullName: "User 8",
+    avatar: "https://example.com/avatar3.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  },
+  {
+    _id: objectId("507f1f77bcf86cd799439009"),
+    userName: "user9",
+    email: "user9@example.com",
+    fullName: "User 9",
+    avatar: "https://example.com/avatar1.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  },
+  {
+    _id: objectId("507f1f77bcf86cd79943900a"),
+    userName: "user10",
+    email: "user10@example.com",
+    fullName: "User 10",
+    avatar: "https://example.com/avatar5.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  },
+  {
+    _id: objectId("507f1f77bcf86cd79943900b"),
+    userName: "user11",
+    email: "user11@example.com",
+    fullName: "User 11",
+    avatar: "https://example.com/avatar3.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  },
+  {
+    _id: objectId("507f1f77bcf86cd79943900c"),
+    userName: "user12",
+    email: "user12@example.com",
+    fullName: "User 12",
+    avatar: "https://example.com/avatar5.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  },
+  {
+    _id: objectId("507f1f77bcf86cd79943900d"),
+    userName: "user13",
+    email: "user13@example.com",
+    fullName: "User 13",
+    avatar: "https://example.com/avatar4.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  },
+  {
+    _id: objectId("507f1f77bcf86cd79943900e"),
+    userName: "user14",
+    email: "user14@example.com",
+    fullName: "User 14",
+    avatar: "https://example.com/avatar5.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  },
+  {
+    _id: objectId("507f1f77bcf86cd79943900f"),
+    userName: "user15",
+    email: "user15@example.com",
+    fullName: "User 15",
+    avatar: "https://example.com/avatar4.jpg",
+    coverimage: "https://example.com/cover.jpg",
+    password: "hashed_password",
+    refreshToken: "",
+    createdAt: new Date("2025-07-15T21:22:02.342Z"),
+    updatedAt: new Date("2025-07-15T21:22:02.342Z"),
+    watchHistory: []
+  }
+];
+
+export default users;
