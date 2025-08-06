@@ -6,9 +6,8 @@ import cookieParser from 'cookie-parser';
 const DataLimit="20kb";
 
 app.use(cors({
-    origin:process.env.CORS_ORIGIN,
-    methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE'],
-    credentials: true
+    origin:'*',
+    methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE']
 }))
 app.use(express.urlencoded({
     extended:true,
