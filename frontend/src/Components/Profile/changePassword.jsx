@@ -1,27 +1,42 @@
 import { useState } from "react";
-
+import User from '../../backendUtility/user.utility'
+import {toast} from 'react-toastify'
+import LoadingSpinner from '../dashBoard/LoadingSpinner'
 const ChangePassword = () => {
   const [formData, setFormData] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
-
+  const [isLoading,setIsLoading]=useState(false);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async(e) => {
+    try {
+      e.preventDefault();
+      setIsLoading(true)
     if (formData.newPassword !== formData.confirmPassword) {
       alert("New passwords do not match.");
       return;
     }
-
-    // 🔐 Call API or handle password change logic
-    console.log("Password changed", formData);
+    const response=await User.changePassword({
+      oldPassword:formData.currentPassword,
+      newPassword:formData.newPassword,
+      retypeNewPassword:formData.confirmPassword
+    })
+    if(response.statusCode===200){
+      toast.success('Password changed successfully')
+    }else{
+      toast.error(response.message)
+    }
+    } catch (error) {
+      toast.error(error.message);
+    }finally{
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -78,7 +93,7 @@ const ChangePassword = () => {
           type="submit"
           className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-md font-semibold"
         >
-          Change Password
+          {isLoading?<LoadingSpinner size={20} />:"Change Password"}
         </button>
       </form>
     </div>

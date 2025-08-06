@@ -1,21 +1,46 @@
 import { useNavigate } from 'react-router-dom';
-import User from '../../../backendUtility/user.utility'
+import User from '../../../backendUtility/user.utility';
 import { useDispatch, useSelector } from 'react-redux';
 import { logOutUser } from '../../../Features/User/User.slice';
-
-
+import userObject from '../../../backendUtility/user.utility';
+import { toast } from 'react-toastify';
+import { useState } from 'react';
 
 function LoggedInView({ user, setIsOpen }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userName=useSelector((state)=>(state.user.userData.userName));
+  const userName = useSelector((state) => state.user.userData.userName);
 
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    try {
+      const response = await userObject.deleteAccount();
+      if (response.statusCode === 200) {
+        toast.success("Account Deleted Successfully");
+        localStorage.clear();
+        sessionStorage.clear();
+        navigate('/');
+        window.location.reload();
+        setIsOpen((prev)=>!prev)
+      } else {
+        toast.error("Error Occurred while deleting account");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
+  };
 
   const menuItems = [
-  { icon: "fa-solid fa-user", label: "Your Profile", to: `/user/${userName}` },
-  { icon: "fa-solid fa-chart-line", label: "Dashboard", to: "/user/dashboard" },
-  { icon: "fa-solid fa-trash", label: "Delete Account", to: "/user/deleteAccount" }
-];
+    { icon: "fa-solid fa-user", label: "Your Profile", to: `/user/${userName}` },
+    { icon: "fa-solid fa-chart-line", label: "Dashboard", to: "/user/dashboard" },
+    { 
+      icon: "fa-solid fa-trash", 
+      label: "Delete Account", 
+      action: () => setShowDeleteConfirm(true) 
+    }
+  ];
 
   const handleNavigate = (to) => {
     setIsOpen(false);
@@ -26,11 +51,11 @@ function LoggedInView({ user, setIsOpen }) {
     try {
       await User.logOutUser();
       dispatch(logOutUser());
-      setIsOpen(false); 
+      setIsOpen(false);
       navigate('/');
     } catch (error) {
       console.error(error.message);
-    } 
+    }
   };
 
   return (
@@ -53,7 +78,7 @@ function LoggedInView({ user, setIsOpen }) {
         {menuItems.map((item) => (
           <div
             key={item.label}
-            onClick={() => handleNavigate(item.to)}
+            onClick={() => item.action ? item.action() : handleNavigate(item.to)}
             className="cursor-pointer flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-gradient-to-r hover:from-purple-600/20 hover:to-blue-600/20 hover:text-white transition-all duration-200 group"
           >
             <i className={`${item.icon} text-purple-400 group-hover:scale-110 transition-transform duration-200 w-4`}></i>
@@ -62,15 +87,35 @@ function LoggedInView({ user, setIsOpen }) {
         ))}
       </div>
 
+      {showDeleteConfirm && (
+        <div className="border-t border-gray-700/50 p-4 bg-red-900/30">
+          <p className="text-sm text-white mb-3">Are you sure you want to delete your account?</p>
+          <div className="flex gap-3">
+            <button
+              onClick={handleDeleteAccount}
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm"
+            >
+              Yes
+            </button>
+            <button
+              onClick={() => setShowDeleteConfirm(false)}
+              className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-lg text-sm"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="border-t border-gray-700/50"></div>
 
       <div className="py-2">
         <button
-          className="flex items-center  gap-4 px-4 py-3 w-full text-sm text-red-400 hover:bg-red-600/20 hover:text-red-300 transition-all duration-200 group"
+          className="flex items-center gap-4 px-4 py-3 w-full text-sm text-red-400 hover:bg-red-600/20 hover:text-red-300 transition-all duration-200 group"
           onClick={logOutHandler}
         >
-          <i className="fa-solid  fa-right-from-bracket group-hover:scale-110 transition-transform duration-200 w-4"></i>
-          <span className=" group-hover:translate-x-1 transition-transform duration-200">
+          <i className="fa-solid fa-right-from-bracket group-hover:scale-110 transition-transform duration-200 w-4"></i>
+          <span className="group-hover:translate-x-1 transition-transform duration-200">
             Log Out
           </span>
         </button>

@@ -5,28 +5,20 @@ import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 
 export default function SaveToPlaylistModal({ setIsAddToPlaylistClicked }) {
-  const videoId=useParams().videoId;
+  const { videoId } = useParams();
   const [userPlaylists, setUserPlaylists] = useState([]);
-  const [selectedPlaylists, setSelectedPlaylists] = useState([]);
-
   const user = useSelector((state) => state.user.userData);
 
-  // Fetch user playlists
   const fetchPlaylists = async () => {
     try {
       const response = await playlist.getUserPlaylists(user._id);
       if (response.statusCode === 200) {
         setUserPlaylists(response.data);
-        // Pre-select playlists that already contain this video
-        const preSelected = response.data
-          .filter((pl) => pl.videos.includes(videoId))
-          .map((pl) => pl._id);
-        setSelectedPlaylists(preSelected);
       } else {
         toast.error("Failed to fetch playlists");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Error fetching playlists");
     }
   };
@@ -37,40 +29,43 @@ export default function SaveToPlaylistModal({ setIsAddToPlaylistClicked }) {
     }
   }, [user?._id]);
 
-  // Handle add/remove video to/from playlist
   const handleToggle = async (playlistId) => {
+    setUserPlaylists((prev) =>
+      prev.map((pl) =>
+        pl._id === playlistId
+          ? {
+              ...pl,
+              videos: pl.videos.includes(videoId)
+                ? pl.videos.filter((v) => v !== videoId)
+                : [...pl.videos, videoId],
+            }
+          : pl
+      )
+    );
+
     try {
-      let updated;
-      if (selectedPlaylists.includes(playlistId)) {
-        // Remove video
-        const res = await playlist.removeVideoFromPlaylist({
-          playlistId,
-          videoId,
-        });
+      const playlistObj = userPlaylists.find((pl) => pl._id === playlistId);
+      const isAlreadySelected = playlistObj?.videos?.includes(videoId);
+
+      let res;
+      if (isAlreadySelected) {
+        res = await playlist.removeVideoFromPlaylist({ playlistId, videoId });
         if (res.statusCode === 200) {
           toast.success("Removed from playlist");
-          updated = selectedPlaylists.filter((id) => id !== playlistId);
         } else {
-          toast.error(res.message);
-          return;
+          throw new Error(res.message);
         }
       } else {
-        // Add video
-        const res = await playlist.addVideoToPlaylist({
-          playlistId,
-          videoId,
-        });
+        res = await playlist.addVideoToPlaylist({ playlistId, videoId });
         if (res.statusCode === 200) {
           toast.success("Added to playlist");
-          updated = [...selectedPlaylists, playlistId];
         } else {
-          toast.error(res.message);
-          return;
+          throw new Error(res.message);
         }
       }
-      setSelectedPlaylists(updated);
+      fetchPlaylists();
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Error updating playlist");
     }
   };
@@ -78,9 +73,8 @@ export default function SaveToPlaylistModal({ setIsAddToPlaylistClicked }) {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
       <div className="bg-black text-white rounded-xl p-6 w-80 shadow-lg">
-        {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">Save To playlist</h2>
+          <h2 className="text-lg font-semibold">Save To Playlist</h2>
           <button
             onClick={() => setIsAddToPlaylistClicked(false)}
             className="text-gray-400 hover:text-white"
@@ -89,16 +83,12 @@ export default function SaveToPlaylistModal({ setIsAddToPlaylistClicked }) {
           </button>
         </div>
 
-        {/* Playlist List */}
         <div className="space-y-3">
           {userPlaylists.map((pl) => (
-            <label
-              key={pl._id}
-              className="flex items-center gap-3 cursor-pointer"
-            >
+            <label key={pl._id} className="flex items-center gap-3 cursor-pointer">
               <input
                 type="checkbox"
-                checked={selectedPlaylists.includes(pl._id)}
+                checked={pl.videos.includes(videoId)}
                 onChange={() => handleToggle(pl._id)}
                 className="w-4 h-4 rounded accent-purple-500"
               />

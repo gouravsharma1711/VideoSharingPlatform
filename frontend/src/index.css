@@ -17,3 +17,7 @@
 .uploadVideoClass{
   scrollbar-width: none;
 }
+input[type="checkbox"] {
+  -webkit-appearance: checkbox;
+  appearance: checkbox;
+}

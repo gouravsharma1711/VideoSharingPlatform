@@ -43,7 +43,7 @@ function VideoPage() {
             </div>
 
             <div className="bg-slate-800/30 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50">
-              <VideoInfo videoData={videoData} setIsAddToPlaylistClicked={setIsAddToPlaylistClicked}/>
+              <VideoInfo videoData={videoData} setIsAddToPlaylistClicked={setIsAddToPlaylistClicked} fetchVideo={fetchVideo}/>
             </div>
 
             <div className="bg-slate-800/30 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50">

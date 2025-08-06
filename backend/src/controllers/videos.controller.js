@@ -152,7 +152,8 @@ const getUserVideos=asyncHandler(async(req,res)=>{
                 views:1,
                 owner:1,
                 createdAt:1,
-                likes:1
+                likes:1,
+                description:1
             }
         }
     ])

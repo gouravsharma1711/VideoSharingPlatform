@@ -1,17 +1,22 @@
 import { useSelector } from "react-redux";
-import { NavLink,Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
+import { ImageLoader } from '../Loading/MediaLoader.jsx';
+
 function SideBar({ isOpen, toggleSidebar }) {
-    const menuItems = [
-        { icon: "fa-solid fa-chart-line", label: "Dashboard", to: "/user/dashboard" },
+    const publicMenuItems = [
         { icon: "fa-solid fa-house", label: "Home", to: "/" },
-        { icon: "fa-solid fa-clock-rotate-left", label: "History", to: "/user/watch-history" },
-        { icon: "fa-solid fa-thumbs-up", label: "Liked Videos", to: "/user/likes" },
-        { icon: "fa-solid fa-video", label: "My Content", to: "/user/Content" },
-        { icon: "fa-solid fa-users", label: "Subscriptions", to: "/user/subscriptions" }
     ];
 
+    const privateMenuItems = [
+        { icon: "fa-solid fa-chart-line", label: "Dashboard", to: "/user/dashboard", requiresAuth: true },
+        { icon: "fa-solid fa-clock-rotate-left", label: "History", to: "/user/watch-history", requiresAuth: true },
+        { icon: "fa-solid fa-thumbs-up", label: "Liked Videos", to: "/user/likes", requiresAuth: true },
+        { icon: "fa-solid fa-video", label: "My Content", to: "/user/Content", requiresAuth: true },
+        { icon: "fa-solid fa-users", label: "Subscriptions", to: "/user/subscriptions", requiresAuth: true }
+    ];
 
     const user = useSelector((state) => state.user.userData);
+    const menuItems = user ? [...publicMenuItems, ...privateMenuItems] : publicMenuItems;
     
 
     return (
@@ -28,17 +33,49 @@ function SideBar({ isOpen, toggleSidebar }) {
                 <div className="h-full px-4 flex flex-col mt-6 pb-4 overflow-y-auto">
                     
                     <div className="pb-6 flex flex-col items-center justify-center gap-3 border-b border-gray-700/50">
-                        <Link to={`/user/${user?.userName}`}>
-                            <div className="relative">
-                                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                <div className="relative w-24 h-24 overflow-hidden rounded-full bg-gradient-to-r from-purple-600 to-blue-600 p-1">
-                                    <img className="h-full w-full rounded-full object-cover" src={user===null? `https://cdn.pixabay.com/photo/2019/08/11/18/59/icon-4399701_1280.png`:user.avatar} alt="Profile" />
+                        {user ? (
+                            <Link to={`/user/${user.userName}`} className="group">
+                                <div className="relative">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                    <div className="relative w-24 h-24 overflow-hidden rounded-full bg-gradient-to-r from-purple-600 to-blue-600 p-1">
+                                        <ImageLoader 
+                                            className="h-full w-full rounded-full object-cover" 
+                                            src={user.avatar} 
+                                            alt="Profile"
+                                            fallbackSrc="https://cdn.pixabay.com/photo/2019/08/11/18/59/icon-4399701_1280.png"
+                                        />
+                                    </div>
+                                </div>
+                                <span className="text-lg font-bold mt-2 block text-center bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                                    {user.fullName}
+                                </span>
+                            </Link>
+                        ) : (
+                            <div className="text-center">
+                                <div className="relative w-24 h-24 overflow-hidden rounded-full bg-gradient-to-r from-gray-600 to-gray-700 p-1 mx-auto mb-3">
+                                    <ImageLoader 
+                                        className="h-full w-full rounded-full object-cover" 
+                                        src="https://cdn.pixabay.com/photo/2019/08/11/18/59/icon-4399701_1280.png"
+                                        alt="Guest Profile"
+                                    />
+                                </div>
+                                <span className="text-lg font-bold text-gray-400">Guest User</span>
+                                <div className="mt-3 space-y-2">
+                                    <Link 
+                                        to="/user/signin"
+                                        className="block bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:scale-105"
+                                    >
+                                        Sign In
+                                    </Link>
+                                    <Link 
+                                        to="/user/signup"
+                                        className="block bg-slate-700/50 hover:bg-slate-600/50 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:scale-105 border border-gray-600/50"
+                                    >
+                                        Sign Up
+                                    </Link>
                                 </div>
                             </div>
-                            <span className="text-lg font-bold mt-2 block text-center bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-                                {user!==null?`${user.fullName}`:"User Name"}
-                            </span>
-                        </Link>
+                        )}
                     </div>
                     
                     <ul className="space-y-2 font-medium pt-6">

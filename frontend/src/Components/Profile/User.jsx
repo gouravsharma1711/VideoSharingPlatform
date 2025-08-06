@@ -14,7 +14,8 @@ import Loading from "../Loading/Loading.jsx";
 
 const User = () => {
   const [loading,setLoading]=useState(false);
-  const currentUser = useSelector((state) => state.user.userData); // logged In user
+  const currentUser = useSelector((state) => state.user.userData);
+   // logged In user
   const { userName } = useParams(); 
   const [videoData,setVideoData]=useState([]);
 
@@ -101,7 +102,7 @@ useEffect(() => {
     <div className="min-h-screen bg-black text-white">
       {isEditProfileOpen && (
         <div className="fixed top-0 left-0 w-full h-screen bg-black bg-opacity-60 z-50 flex justify-center items-center py-10 ">
-          <EditProfile user={user} onClose={EditProfileButtonHandler} />
+          <EditProfile user={currentUser} onClose={EditProfileButtonHandler} />
         </div>
       )}
       {/* Cover Image */}

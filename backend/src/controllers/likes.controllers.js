@@ -107,7 +107,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
                             from:"users",
                             localField:'owner',
                             foreignField:'_id',
-                            as:'user',
+                            as:'owner',
                             pipeline:[
                                 {
                                     $project:{
@@ -120,8 +120,8 @@ const getLikedVideos = asyncHandler(async (req, res) => {
                     }, 
                     {
                         $addFields:{
-                            user:{
-                                $first:'$user'
+                            owner:{
+                                $first:'$owner'
                             }
                         }
                     },
@@ -134,7 +134,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
                             duration:1,
                             createdAt:1,
                             views:1,
-                            user:1
+                            owner:1
                         }
                     },
                 ]

@@ -15,6 +15,8 @@ import Playlist from './Components/PlayList/PlaylistPage.jsx'
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { loggedInUser, logOutUser } from "./Features/User/User.slice.js";
+import SearchResultPage from './Components/searchResult/SearchResultPage.jsx'
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -33,6 +35,10 @@ function App() {
               element: <VideoPage />
             },
           ]
+        },
+        {
+          path:'results',
+          element:<SearchResultPage/>
         },
         {
           path: '/user',

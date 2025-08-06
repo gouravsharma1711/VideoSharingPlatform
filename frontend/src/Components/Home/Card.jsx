@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {useSelector} from 'react-redux'
 import { Link } from "react-router-dom";
-
+import { ImageLoader, VideoLoader } from '../Loading/MediaLoader.jsx';
+import videos from "../../backendUtility/videos.utility.js";
+import userObject from "../../backendUtility/user.utility.js";
 function Card({ item }) {
-  
+  const user=useSelector((state)=>state.user.userData)
   const [isHovered, setIsHovered] = useState(false);
   const Navigate = useNavigate();
 
@@ -11,41 +14,17 @@ function Card({ item }) {
     "Here is your Title, My first Video | Gourav Sharma | Shardha Kapoor | Sajna Kapoor | Ranjeet Kumar";
 
   const HandleNavigateToVideoPage = () => {
+    videos.getSingleView(item._id)
     Navigate(`/videos/${item?._id}`);
+    if(user){
+      userObject.addToWatchHistory(item._id);
+    }
   };
 
   const HandleProfileNavigation = (e) => {
     e.stopPropagation();
     Navigate(`/user/${item?.owner?.userName}`);
   };
-
-  const convertToLowQuality = (url) => {
-  let width;
-  let height;
-
-  const screenWidth = window.innerWidth;
-
-  if (screenWidth < 640) {
-    // Mobile
-    width = 200;
-    height = 120;
-  } else if (screenWidth < 1024) {
-    // Tablet
-    width = 300;
-    height = 180;
-  } else {
-    // Desktop
-    width = 400;
-    height = 240;
-  }
-
-  let lowQualityUrl = url.replace(
-    "/upload/",
-    `/upload/q_60,w_${width},h_${height},f_auto/`
-  );
-
-  return lowQualityUrl;
-};
 
 
   return (
@@ -58,44 +37,43 @@ function Card({ item }) {
       <div className="relative w-full h-48 overflow-hidden rounded-t-2xl">
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10"></div>
         {isHovered ? (
-          <video
+          <VideoLoader
             src={
               item
-                ? (convertToLowQuality(item.videoFile))
+                ? (item.videoFile)
                 : "https://res.cloudinary.com/dcs7eq5kf/video/upload/v1752773278/VSW_Videos/olirxyd7pswetcs26rwp.mp4"
             }
             autoPlay
             muted
             loop
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            poster={item?.thumbnail}
           />
         ) : (
-          <img
-            src={`${
-              item
-                ? item.thumbnail
-                : "https://res.cloudinary.com/dcs7eq5kf/image/upload/v1752773278/VSW_Thumbnails/fqzjxk6yv4f0t9g6l4mz.jpg"
-            }`}
-            alt="Thumbnail"
+          <ImageLoader
+            src={
+              item?.thumbnail || "https://res.cloudinary.com/dcs7eq5kf/image/upload/v1752773278/VSW_Thumbnails/fqzjxk6yv4f0t9g6l4mz.jpg"
+            }
+            alt="Video Thumbnail"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
         )}
-        <div className="absolute bottom-2 right-2 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-md z-20">
-          {item ? (item.duration / 60).toFixed(2) : ""} mins
-        </div>
+        {item?.duration && (
+          <div className="absolute bottom-2 right-2 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-md z-20">
+            {Math.floor(item.duration / 60)}:{String(Math.floor(item.duration % 60)).padStart(2, '0')}
+          </div>
+        )}
       </div>
 
       <div className="flex gap-3 p-4">
         <div className="relative group/avatar">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur opacity-0 group-hover/avatar:opacity-75 transition-opacity duration-300"></div>
-          <img
-            src={`${
-              item
-                ? item.owner?.avatar
-                : "https://res.cloudinary.com/dcs7eq5kf/image/upload/v1752773278/VSW_ProfilePictures/qoq4b9n0a6p2u9c4jzwn.png"
-            }`}
+          <ImageLoader
+            src={
+              item?.owner?.avatar || "https://res.cloudinary.com/dcs7eq5kf/image/upload/v1752773278/VSW_ProfilePictures/qoq4b9n0a6p2u9c4jzwn.png"
+            }
             alt="Channel Profile"
-            className="relative h-10 w-10 rounded-full object-cover border-2 border-transparent hover:border-purple-500/50 transition-all duration-300 hover:scale-110"
+            className="relative h-10 w-10 rounded-full object-cover border-2 border-transparent hover:border-purple-500/50 transition-all duration-300 hover:scale-110 cursor-pointer"
             onClick={HandleProfileNavigation}
           />
         </div>

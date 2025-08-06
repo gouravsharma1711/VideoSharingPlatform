@@ -103,11 +103,9 @@ class User {
         }
     }
 
-    async updateAccountDetails({ fullName, userName, email }) {
+    async updateAccountDetails(form) {
         try {
-            const { data } = await axiosInstance.post("/update-account-details", {
-                fullName, userName, email
-            });
+            const { data } = await axiosInstance.post("/update-account-details", form);
             return data;
         } catch (error) {
             console.error("Update account details error:", error);
@@ -117,7 +115,6 @@ class User {
 
     async getUserProfile(userName) {
         try {
-            
             const response = await axiosInstance.get(`/profile/${userName}`);
             return response.data;
         } catch (error) {

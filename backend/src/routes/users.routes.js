@@ -37,7 +37,7 @@ router.route("/change-cover-image").patch(auth,upload.single("coverImage"),updat
 router.route('/update-account-details').post(auth,upload.none(),updateAccountDetails);
 router.route('/delete-account').delete(auth,deleteAccount);
 router.route('/watchHistory').get(auth,getWatchHistory);
-router.route('/profile/:userName').get(auth,getUserChannelProfile);
+router.route('/profile/:userName').get(getUserChannelProfile);
 router.route('/updateWatchHistory/:videoId').get(upload.none(),auth,updateWatchHistory);
 router.route('/clear-History').delete(auth,clearAllWatchHistory)
 

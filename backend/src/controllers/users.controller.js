@@ -41,7 +41,7 @@ const generateRefreshAndAccessToken = async (userId) => {
     throw new ApiError(error.statusCode, error.message);
   }
 };
-
+console.log
 const signUpUser = asyncHandler(async (req, res) => {
   // similarly with the files and in which avatar is reqired field
   // check that the user is not already exists or not
@@ -134,7 +134,7 @@ const logInUser = asyncHandler(async (req, res) => {
 
   const { userName, email, password } = req.body;
 
-  console.log("req.body : ", req.body);
+  
 
   if (!userName && !email) {
     throw new ApiError(400, "Please provide either userName or email");
@@ -377,7 +377,6 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {
   const userName = req.params.userName;
-  console.log("currUser ", req.user);
 
   if (!userName?.trim()) {
     throw new ApiError(400, "UserName is required");
@@ -524,7 +523,6 @@ const getWatchHistory = asyncHandler(async (req, res) => {
       },
     },
   ]);
-  console.log("watchHistory", watchHistory);
   
   res
     .status(200)
@@ -613,8 +611,8 @@ const deleteAccount = asyncHandler(async (req, res) => {
   await User.deleteOne({ _id: userId });
   res
     .status(200)
-    .clearCookie("refreshToken", options)
-    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", cookieOptions)
+    .clearCookie("accessToken", cookieOptions)
     .json(new ApiResponse(200, "Account deleted successfully"));
 });
 
@@ -635,14 +633,11 @@ const updateWatchHistory = asyncHandler(async (req, res) => {
   if (!currUser) {
     throw new ApiError(404, "User not found");
   }
-  console.log("Hello1");
 
   currUser.watchHistory = currUser.watchHistory.filter(
     (id) => id.toString() !== videoId.toString()
   );
-  console.log("Hello2");
   currUser.watchHistory.unshift(videoId);
-  console.log("Hello3");
 
   if (currUser.watchHistory.length > 50) {
     currUser.watchHistory = currUser.watchHistory.slice(0, 50);

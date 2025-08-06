@@ -75,11 +75,8 @@ function CommentCard({ comment, FetchComment }) {
   };
 
   const handleDislike = async () => {
-    setIsDisliked((prev) => {
-      if (!prev) setIsCommentLiked(false);
-      return !prev;
-    });
-    // If dislike is also saved in backend, do that here
+    setIsDisliked((prev) =>  !prev);
+    if(!isDisliked)toast.success("You disliked The comment");
   };
 
   useEffect(() => {
