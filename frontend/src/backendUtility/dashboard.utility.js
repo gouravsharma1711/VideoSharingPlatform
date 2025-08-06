@@ -4,7 +4,7 @@ class DashBoard{
     async getCurrentStats(){
         try {
             
-            const response=await axios.get("http://localhost:8000/api/v1/dashboard"
+            const response=await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/dashboard`
                 ,{withCredentials:true}
             );
             return response.data;
