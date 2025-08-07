@@ -172,6 +172,7 @@ const getUserVideos=asyncHandler(async(req,res)=>{
 
 const getAllVideos = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10, userId } = req.query
+    console.log("I'm Getting the request from the frontend ");
     const pipeline=[
         {
             $match:{
@@ -241,9 +242,12 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
     const aggregate = Video.aggregate(pipeline);
     const videos = await Video.aggregatePaginate(aggregate, options); 
+    console.log("Checking is video is there in db or not");
     if(!videos || !videos.docs|| videos.docs.length===0){
         throw new ApiError(404,"No Videos Found");
     }
+    console.log("videos are there so response status code is 200");
+    
     res.status(200).json(
         new ApiResponse(200,"Successfully Video is Fetched",videos.docs)
     )
