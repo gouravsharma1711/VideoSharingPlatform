@@ -244,7 +244,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     const videos = await Video.aggregatePaginate(aggregate, options); 
     console.log("Checking is video is there in db or not");
     if(!videos || !videos.docs|| videos.docs.length===0){
-        throw new ApiError(404,"No Videos Found");
+        return res.status(200).json(new ApiResponse(200,"No Video Found",[]))
     }
     console.log("videos are there so response status code is 200");
     
