@@ -18,11 +18,11 @@ import mongoose from "mongoose";
 
 const cookieOptions = {
   httpOnly: true,
-  secure: true,
-  sameSite: "None",
+  secure: process.env.NODE_ENV === 'production', // Only secure in production
+  sameSite: process.env.NODE_ENV === 'production' ? "None" : "Lax",
   path: "/",
   maxAge: 24 * 60 * 60 * 1000,
-  sameSite:"None",
+  domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined
 };
 
 const generateRefreshAndAccessToken = async (userId) => {
@@ -44,7 +44,6 @@ const generateRefreshAndAccessToken = async (userId) => {
     throw new ApiError(error.statusCode, error.message);
   }
 };
-console.log
 const signUpUser = asyncHandler(async (req, res) => {
   // similarly with the files and in which avatar is reqired field
   // check that the user is not already exists or not
