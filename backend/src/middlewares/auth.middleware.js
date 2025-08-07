@@ -9,7 +9,7 @@ const auth=asyncHandler(async(req,_,next)=>{
     // call next()
 
     const cookies=req.cookies;
-    
+    console.log("Cookies : ",cookies);
     if(!cookies || !cookies.accessToken || !cookies.refreshToken){
         throw new ApiError(401,"User is Not logged In!");
     }
