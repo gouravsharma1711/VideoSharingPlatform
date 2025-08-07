@@ -4,9 +4,9 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 const DataLimit="20kb";
-
+const allowedOrigins = process.env.CORS_ORIGIN.split(',');
 app.use(cors({
-     origin:process.env.CORS_ORIGIN,
+     origin:allowedOrigins,
     methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE'],
     credentials: true
 }))
