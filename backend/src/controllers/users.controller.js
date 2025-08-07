@@ -19,6 +19,7 @@ import mongoose from "mongoose";
 const cookieOptions = {
   httpOnly: true,
   secure: true,
+  sameSite: "None",
   path: "/",
 };
 
