@@ -8,7 +8,6 @@ import SuggestedVideos from "./SuggestedVideos.jsx";
 import { useParams } from "react-router-dom";
 import videos from "../../backendUtility/videos.utility";
 import { toast } from "react-toastify";
-import SaveToPlaylistModal from "./SaveToPlaylistModal.jsx";
 function VideoPage() {
 
   const [isAddToPlaylistClicked,setIsAddToPlaylistClicked]=useState(false);

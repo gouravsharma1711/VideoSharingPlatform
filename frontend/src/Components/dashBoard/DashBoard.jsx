@@ -10,7 +10,6 @@ import LoadingSpinner from "./LoadingSpinner.jsx";
 import EditVideo from "./EditVideo.jsx";
 import { useSelector,useDispatch } from "react-redux";
 import { toggleEdit } from "../../Features/DashBoard/videoEditingButton.Slice.js";
-import Auth from "../Auth/Auth.jsx";
 
 const ViewsIcon = () => <i className="fa-regular fa-eye"></i>;
 const FollowersIcon = () => <i className="fa-solid fa-user"></i>;
@@ -44,7 +43,6 @@ function Dashboard() {
       const responseData = await videos.getCurrentUserVideos();
       if (responseData?.statusCode !== 200) {
         toast.error(responseData?.message);
-        return;
       }
       else {
         setVideoData(responseData?.data || []);

@@ -21,6 +21,8 @@ const cookieOptions = {
   secure: true,
   sameSite: "None",
   path: "/",
+  maxAge: 24 * 60 * 60 * 1000,
+  sameSite:"None",
 };
 
 const generateRefreshAndAccessToken = async (userId) => {

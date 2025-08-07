@@ -12,7 +12,7 @@ function Home() {
   const fetchVideos = async (pageNum = 1) => {
     try {
       setLoading(true);
-      const response = await videos.getAllVideos(pageNum);
+      const response = await videos.getAllVideos({page:pageNum});
       if (response.statusCode === 200) {
         const newVideos = response.data;
         if (newVideos.length === 0) {

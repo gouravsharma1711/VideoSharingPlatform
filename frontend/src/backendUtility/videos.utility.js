@@ -19,6 +19,7 @@ class Videos {
     }
 
     async getAllVideos({ page = 1, limit = 10 } = {}) {
+        console.log("I got the request : ",page);
         try {
             const response = await axiosInstance.get(
                 `/`,
@@ -142,7 +143,6 @@ class Videos {
     async getCurrentUserVideos() {
         try {
             const response = await axiosInstance.get(`/user-videos`);
-            
             return response.data;
         } catch (error) {
             console.error("getCurrentUserVideos error:", error);
