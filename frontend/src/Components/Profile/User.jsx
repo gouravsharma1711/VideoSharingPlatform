@@ -104,7 +104,7 @@ useEffect(() => {
 
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-red-800 text-white">
       {isEditProfileOpen && (
         <div className="fixed top-0 left-0 w-full h-screen bg-black bg-opacity-60 z-50 flex justify-center items-center py-10 ">
           <EditProfile user={currentUser} onClose={EditProfileButtonHandler} />
