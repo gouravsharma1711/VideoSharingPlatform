@@ -21,6 +21,7 @@ const cookieOptions = {
   secure: true,
   sameSite: "None",
   path: "/",
+  domain: ".onrender.com", 
   maxAge: 24 * 60 * 60 * 1000,
 };
 
