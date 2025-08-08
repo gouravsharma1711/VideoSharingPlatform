@@ -46,8 +46,11 @@ const User = () => {
   const fetchUser = async () => {
       try {
         setLoading(true);
+        console.log("Hello world");
+        
         const currUser = await UserObject.getUserProfile(userName);
-
+        console.log("Hello World 2");
+        
        if ( currUser && currUser.data!==null && currUser?.statusCode === 200 ){
           setUser(currUser.data);
         } else {
