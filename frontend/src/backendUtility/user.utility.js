@@ -117,6 +117,9 @@ class User {
         try {
             const response = await axiosInstance.get(`/profile/${userName}`);
             return response.data;
+            console.log("Response data : ",response);
+            console.log("Response.data  data : ",response.data);
+            
         } catch (error) {
             console.error("Get user profile error:", error);
             throw error;
