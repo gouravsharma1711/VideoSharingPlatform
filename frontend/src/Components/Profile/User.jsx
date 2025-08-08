@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import UserVideos from "./UserVideos";
 import Playlist from "../PlayList/Playlist.jsx";
 import SubscriptionTab from "./SubscriptionTab.jsx";
@@ -43,29 +43,29 @@ const User = () => {
     }
   }
 
-  // const fetchUser = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const currUser = await UserObject.getUserProfile(userName);
+  const fetchUser = async () => {
+      try {
+        setLoading(true);
+        const currUser = await UserObject.getUserProfile(userName);
 
-  //      if ( currUser && currUser.data!==null && currUser?.statusCode === 200 ){
-  //         setUser(currUser.data);
-  //       } else {
-  //         setUser({});
-  //       }
-  //     } catch (error) {
-  //       console.log(error.message);
-  //       setUser({});
-  //     }finally{
-  //       setLoading(false);
-  //     }
-  //   };
+       if ( currUser && currUser.data!==null && currUser?.statusCode === 200 ){
+          setUser(currUser.data);
+        } else {
+          setUser({});
+        }
+      } catch (error) {
+        console.log(error.message);
+        setUser({});
+      }finally{
+        setLoading(false);
+      }
+    };
 
   
 
-//   useEffect(() => {
-//   fetchUser();
-// }, [userName]);
+  useEffect(() => {
+  fetchUser();
+}, [userName]);
 
 useEffect(() => {
   if (user && user._id) {
@@ -73,6 +73,13 @@ useEffect(() => {
   }
 }, [user._id]);
   
+
+useEffect(()=>{
+  console.log("user : ",user);
+  console.log("videoData : ",videoData);
+},[user,videoData])
+
+
   const [currentTab, setCurrentTab] = useState("UserVideos");
 
   const HandleTabChange = (tabName) => {
