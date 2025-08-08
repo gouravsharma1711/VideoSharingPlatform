@@ -18,11 +18,10 @@ import mongoose from "mongoose";
 
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production', // Only secure in production
-  sameSite: process.env.NODE_ENV === 'production' ? "None" : "Lax",
+  secure: true,
+  sameSite: "None",
   path: "/",
-  maxAge: 24 * 60 * 60 * 1000,
-  domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined
+  maxAge: 24 * 60 * 60 * 1000
 };
 
 const generateRefreshAndAccessToken = async (userId) => {
