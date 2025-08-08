@@ -19,93 +19,34 @@ import SearchResultPage from './Components/searchResult/SearchResultPage.jsx'
 
 function App() {
   const router = createBrowserRouter([
-    {
-      path: '/',
-      element: <Layout />,
-      children: [
-        {
-          path: '',
-          element: <Home />
-        },
-        {
-          path: 'videos',
-          children: [
-            {
-              path: ':videoId',
-              element: <VideoPage />
-            },
-          ]
-        },
-        {
-          path:'results',
-          element:<SearchResultPage/>
-        },
-        {
-          path: '/user',
-          children: [
-            {
-              path: ':userName',
-              element: <User />
-            },
-            {
-              path: 'signup',
-              element: <SignUp />
-            },
-            {
-              path: 'signin',
-              element: <SignIn />
-            },
-            {
-              path: 'watch-history',
-              element: <WatchHistory />
-            },
-            {
-              path: 'dashboard',
-              element: <Dashboard/>
-            },
-            {
-              path: 'likes',
-              element: <UserLikes />
-            },
-            {
-              path: 'Content',
-              element: <UserContent />
-            },
-            {
-              path:'playlist/:playlistId',
-              element:<Playlist/>
-            },
-            {
-              path: 'subscriptions',
-              element: <Subscriptions />
-            }
-          ]
-        }
-      ]
-    },
-  ]);
-
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        const handleStorageChange = () => {
-            const updatedUser = localStorage.getItem("userData");
-            if (updatedUser) {
-                dispatch(loggedInUser(JSON.parse(updatedUser)));
-            } else {
-                dispatch(logOutUser());
-            }
-        };
-
-        window.addEventListener("storage", handleStorageChange);
-
-        const rawUser = localStorage.getItem("userData");
-        if (rawUser) dispatch(loggedInUser(JSON.parse(rawUser)));
-
-        return () => {
-          window.removeEventListener("storage", handleStorageChange);
-        };
-    }, [dispatch]);
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      { path: '', element: <Home /> },
+      { path: 'videos/:videoId', element: <VideoPage /> },
+      { path: 'results', element: <SearchResultPage /> },
+      {
+        // Path for all user-related routes
+        path: 'user',
+        children: [
+          // Static routes MUST come BEFORE dynamic routes
+          { path: 'signup', element: <SignUp /> },
+          { path: 'signin', element: <SignIn /> },
+          { path: 'watch-history', element: <WatchHistory /> },
+          { path: 'dashboard', element: <Dashboard /> },
+          { path: 'likes', element: <UserLikes /> },
+          { path: 'content', element: <UserContent /> },
+          { path: 'playlist/:playlistId', element: <Playlist /> },
+          { path: 'subscriptions', element: <Subscriptions /> },
+          
+          // Dynamic route is last
+          { path: ':userName', element: <User /> },
+        ]
+      }
+    ]
+  },
+]);
 
 
   return (
