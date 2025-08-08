@@ -381,25 +381,25 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Username is required");
     }
 
-    // let loggedInUser = null;
+    let loggedInUser = null;
 
-    // try {
-    //     // Safely check for an access token in cookies
-    //     const token = req.cookies?.accessToken;
+    try {
+        // Safely check for an access token in cookies
+        const token = req.cookies?.accessToken;
 
-    //     if (token) {
-    //         // Verify the token. If it's invalid or expired, the 'catch' block will handle it.
-    //         const decodedToken = jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
-    //         loggedInUser = await User.findById(decodedToken?._id).select("_id");
-    //     }
-    // } catch (error) {
-    //     // If token verification fails, we do nothing.
-    //     // 'loggedInUser' remains null, and we treat the visitor as a guest.
-    //     console.log("Optional auth: Could not verify token. Treating as guest.");
-    // }
+        if (token) {
+            // Verify the token. If it's invalid or expired, the 'catch' block will handle it.
+            const decodedToken = jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
+            loggedInUser = await User.findById(decodedToken?._id).select("_id");
+        }
+    } catch (error) {
+        // If token verification fails, we do nothing.
+        // 'loggedInUser' remains null, and we treat the visitor as a guest.
+        console.log("Optional auth: Could not verify token. Treating as guest.");
+    }
 
-    // // Use the loggedInUser's ID (or null if they are a guest) in the query
-    // const loggedInUserId = loggedInUser?._id || null;
+    // Use the loggedInUser's ID (or null if they are a guest) in the query
+    const loggedInUserId = loggedInUser?._id || null;
 
     const channel = await User.aggregate([
         {
@@ -427,7 +427,14 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
             $addFields: {
                 SubscribersCount: { $size: "$subscribers" },
                 subsribedToCount: { $size: "$subscribedTo" },
-                // isSubscribed: true,
+                isSubscribed: {
+                    // This logic is now safe. If loggedInUserId is null, it correctly returns false.
+                    $cond: {
+                        if: { $in: [loggedInUserId, "$subscribers.subscriber"] },
+                        then: true,
+                        else: false,
+                    },
+                },
             },
         },
         {
@@ -438,7 +445,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
                 coverImage: 1,
                 SubscribersCount: 1,
                 subsribedToCount: 1,
-                // isSubscribed: 1,
+                isSubscribed: 1,
             },
         },
     ]);

@@ -143,8 +143,8 @@ useEffect(() => {
           </p>
         </div>
         <button
-         className={` ${true?'bg-white text-black hover:bg-gray-300':"bg-purple-500 text-white hover:bg-purple-600"}  px-4 py-2 rounded-lg `}
-        //  onClick={isSubscribeHandler}
+         className={` ${user.isSubscribed?'bg-white text-black hover:bg-gray-300':"bg-purple-500 text-white hover:bg-purple-600"}  px-4 py-2 rounded-lg `}
+         onClick={isSubscribeHandler}
          >
           {!user.isSubscribed?"Subscribe":"Unsubscribe"}
         </button>
