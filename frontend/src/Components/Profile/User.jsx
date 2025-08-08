@@ -53,6 +53,8 @@ const User = () => {
         console.log("Hello World 2");
         
        if ( currUser && currUser.data!==null && currUser?.statusCode === 200 ){
+        console.log("data is set Successfully");
+        
           setUser(currUser.data);
         } else {
           setUser({});
