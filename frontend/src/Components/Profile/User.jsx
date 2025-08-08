@@ -187,12 +187,11 @@ useEffect(() => {
           Subscriptions
         </button>
       </div>
-
       {/* Video Grid */}
       <TabContent>
-        {currentTab === "UserVideos" && <UserVideos videoData={videoData}/>}
-        {currentTab === "Playlist" && <Playlist userId={user._id}/>}
-        {currentTab === "Subscriptions" && <SubscriptionTab user={user}/>}
+        {/* {currentTab === "UserVideos" && <UserVideos videoData={videoData}/>} */}
+        {/* {currentTab === "Playlist" && <Playlist userId={user._id}/>} */}
+        {/* {currentTab === "Subscriptions" && <SubscriptionTab user={user}/>} */}
       </TabContent>
     </div>
   );
