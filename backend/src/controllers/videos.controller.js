@@ -159,7 +159,7 @@ const getUserVideos=asyncHandler(async(req,res)=>{
     ])
 
     if(!userVideos || userVideos.length===0){
-        res.status(200).json(
+        return res.status(200).json(
         new ApiResponse(200,"Successfully User's Videos are fetched",[])
     )
     }

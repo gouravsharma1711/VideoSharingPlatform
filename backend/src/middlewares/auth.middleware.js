@@ -2,7 +2,7 @@ import ApiError from '../utils/ApiError.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import jwt from 'jsonwebtoken';
 import {User} from '../models/user.model.js'
-const auth=asyncHandler(async(req,_,next)=>{
+const auth=asyncHandler(async(req,res,next)=>{
     // check for cookies if access and refresh token is there that means user is logged in
     // decode the accessToken and fint out the user from the userId
     // set req.user to the user found
@@ -20,7 +20,10 @@ const auth=asyncHandler(async(req,_,next)=>{
 
     
     if(!user){
-        throw new ApiError(403,"Invalid Token");
+        return res.status(403).json({
+            success:false,
+            message:"Invalid Access Token",
+        })
     }
     
     req.user=user;
