@@ -28,7 +28,7 @@ const User = () => {
     try {
       setLoading(true);
       
-      const response=await videos.getUserVideos(user?._id);
+      const response=await videos.getUserVideos(user._id);
       
       if(response && response.data && response.statusCode===200){
         setVideoData(response.data);
@@ -63,13 +63,15 @@ const User = () => {
 
   
 
-useEffect(() => {
+  useEffect(() => {
   fetchUser();
-}, []);
+}, [userName]);
 
 useEffect(() => {
-  findVideoData();
-}, [user]);
+  if (user && user._id) {
+    findVideoData();
+  }
+}, [user._id]);
   
 
 useEffect(()=>{
