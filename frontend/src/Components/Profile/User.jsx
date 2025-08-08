@@ -100,58 +100,7 @@ useEffect(() => {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {isEditProfileOpen && (
-        <div className="fixed top-0 left-0 w-full h-screen bg-black bg-opacity-60 z-50 flex justify-center items-center py-10 ">
-          <EditProfile user={currentUser} onClose={EditProfileButtonHandler} />
-        </div>
-      )}
-      {/* Cover Image */}
-      <div className="w-full h-[15rem] overflow-hidden">
-        <img
-          src={
-            Object.keys(user).length > 0 && user.coverImage
-              ? user.coverImage
-              : "https://images.pexels.com/photos/7130560/pexels-photo-7130560.jpeg"
-          }
-          alt="Cover"
-          className="w-full h-full object-cover object-center"
-        />
-      </div>
-      {/* Profile Info */}
-      <div className="flex flex-col md:flex-row items-center md:items-start gap-6 px-8 -mt-16">
-        <img
-          src={
-            Object.keys(user).length > 0 && user.avatar
-              ? user.avatar
-              : "https://cdn.pixabay.com/photo/2019/08/11/18/59/icon-4399701_1280.png"
-          }
-          alt="User"
-          className="w-32 h-32 rounded-full border-4 border-black"
-        />
-        <div className="flex-1">
-          <h1 className="text-3xl font-bold text-Border-Black">{user.fullName || ""}</h1>
-          <p className="text-white-400 text-Border-Black font-bold">
-            @{user.userName || ""}
-          </p>
-          <p className="text-sm text-white-400 text-Border-Black font-bold mt-1">
-            {user.SubscribersCount} Subscribers • {user.subsribedToCount} Subscribed
-          </p>
-        </div>
-        <button
-         className={` ${user.isSubscribed?'bg-white text-black hover:bg-gray-300':"bg-purple-500 text-white hover:bg-purple-600"}  px-4 py-2 rounded-lg `}
-         onClick={isSubscribeHandler}
-         >
-          {!user.isSubscribed?"Subscribe":"Unsubscribe"}
-        </button>
-        { currentUser?._id===user?._id && 
-          <button
-          onClick={EditProfileButtonHandler}
-          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-        >
-          Edit Profile
-        </button>
-        }
-      </div>
+      
       {/* Tabs */}
       <div className="flex gap-6 px-8 mt-6 text-gray-400 border-b border-gray-700">
         <button
@@ -189,9 +138,9 @@ useEffect(() => {
       </div>
       {/* Video Grid */}
       <TabContent>
-        {/* {currentTab === "UserVideos" && <UserVideos videoData={videoData}/>} */}
-        {/* {currentTab === "Playlist" && <Playlist userId={user._id}/>} */}
-        {/* {currentTab === "Subscriptions" && <SubscriptionTab user={user}/>} */}
+        {currentTab === "UserVideos" && <UserVideos videoData={videoData}/>}
+        {currentTab === "Playlist" && <Playlist userId={user._id}/>}
+        {currentTab === "Subscriptions" && <SubscriptionTab user={user}/>}
       </TabContent>
     </div>
   );
