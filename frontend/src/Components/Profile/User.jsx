@@ -65,7 +65,7 @@ const User = () => {
 
   useEffect(() => {
   fetchUser();
-}, [userName]);
+}, []);
 
 useEffect(() => {
   if (user && user._id) {
