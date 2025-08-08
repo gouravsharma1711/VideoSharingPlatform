@@ -21,7 +21,7 @@ const cookieOptions = {
   secure: true,
   sameSite: "None",
   path: "/",
-  maxAge: 24 * 60 * 60 * 1000
+  maxAge: 24 * 60 * 60 * 1000,
 };
 
 const generateRefreshAndAccessToken = async (userId) => {
@@ -134,8 +134,6 @@ const logInUser = asyncHandler(async (req, res) => {
   // send the refresh token and access token in the response through cookies
 
   const { userName, email, password } = req.body;
-
-  
 
   if (!userName && !email) {
     throw new ApiError(400, "Please provide either userName or email");
@@ -377,73 +375,88 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 });
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {
-  const userName = req.params.userName;
+    const { userName } = req.params;
 
-  if (!userName?.trim()) {
-    throw new ApiError(400, "UserName is required");
-  }
+    if (!userName?.trim()) {
+        throw new ApiError(400, "Username is required");
+    }
 
-  const user = await User.aggregate([
-    {
-      $match: {
-        userName: userName.trim(),
-      },
-    },
-    {
-      $lookup: {
-        from: "subscriptions",
-        localField: "_id",
-        foreignField: "channel",
-        as: "subscribers",
-      },
-    },
-    {
-      $lookup: {
-        from: "subscriptions",
-        localField: "_id",
-        foreignField: "subscriber",
-        as: "subscribedTo",
-      },
-    },
-    {
-      $addFields: {
-        subscribers: "$subscribers",
-        SubscribersCount: {
-          $size: "$subscribers",
+    let loggedInUser = null;
+
+    try {
+        // Safely check for an access token in cookies
+        const token = req.cookies?.accessToken;
+
+        if (token) {
+            // Verify the token. If it's invalid or expired, the 'catch' block will handle it.
+            const decodedToken = jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
+            loggedInUser = await User.findById(decodedToken?._id).select("_id");
+        }
+    } catch (error) {
+        // If token verification fails, we do nothing.
+        // 'loggedInUser' remains null, and we treat the visitor as a guest.
+        console.log("Optional auth: Could not verify token. Treating as guest.");
+    }
+
+    // Use the loggedInUser's ID (or null if they are a guest) in the query
+    const loggedInUserId = loggedInUser?._id || null;
+
+    const channel = await User.aggregate([
+        {
+            $match: {
+                userName: userName.trim().toLowerCase(),
+            },
         },
-        subsribedToCount: {
-          $size: "$subscribedTo",
+        {
+            $lookup: {
+                from: "subscriptions",
+                localField: "_id",
+                foreignField: "channel",
+                as: "subscribers",
+            },
         },
-        isSubscribed: {
-          $cond: {
-            if: { $in: [req.user?._id, "$subscribers.subscriber"] },
-            then: true,
-            else: false,
-          },
+        {
+            $lookup: {
+                from: "subscriptions",
+                localField: "_id",
+                foreignField: "subscriber",
+                as: "subscribedTo",
+            },
         },
-      },
-    },
-    {
-      $project: {
-        _id: 1,
-        userName: 1,
-        fullName: 1,
-        avatar: 1,
-        coverImage: 1,
-        SubscribersCount: 1,
-        subsribedToCount: 1,
-        isSubscribed: 1,
-      },
-    },
-  ]);
+        {
+            $addFields: {
+                SubscribersCount: { $size: "$subscribers" },
+                subsribedToCount: { $size: "$subscribedTo" },
+                isSubscribed: {
+                    // This logic is now safe. If loggedInUserId is null, it correctly returns false.
+                    $cond: {
+                        if: { $in: [loggedInUserId, "$subscribers.subscriber"] },
+                        then: true,
+                        else: false,
+                    },
+                },
+            },
+        },
+        {
+            $project: {
+                userName: 1,
+                fullName: 1,
+                avatar: 1,
+                coverImage: 1,
+                SubscribersCount: 1,
+                subsribedToCount: 1,
+                isSubscribed: 1,
+            },
+        },
+    ]);
 
-  if (!user) {
-    throw new ApiError(404, "User not found");
-  }
+    if (!channel?.length) {
+        throw new ApiError(404, "User not found");
+    }
 
-  res
-    .status(200)
-    .json(new ApiResponse(200, "User profile fetched successfully", user[0]));
+    return res
+        .status(200)
+        .json(new ApiResponse(200, "User profile fetched successfully", channel[0]));
 });
 
 const getWatchHistory = asyncHandler(async (req, res) => {
@@ -524,41 +537,38 @@ const getWatchHistory = asyncHandler(async (req, res) => {
       },
     },
   ]);
-  
+
   res
     .status(200)
     .json(
-      new ApiResponse(
-        200,
-        "Watch History fetched successfully",
-        watchHistory
-      )
+      new ApiResponse(200, "Watch History fetched successfully", watchHistory)
     );
 });
 
-const clearAllWatchHistory=asyncHandler(async(req,res)=>{
+const clearAllWatchHistory = asyncHandler(async (req, res) => {
   // get the current user id
   // if user Id is no there then throw an error
-   // find the user by id
-   // clear the whole array watchHisory field
-   // save it back to the database
-   const userId=req.user._id;
-   if(!userId){
-     throw new ApiError(403,"User is not logged in")
-   }
+  // find the user by id
+  // clear the whole array watchHisory field
+  // save it back to the database
+  const userId = req.user._id;
+  if (!userId) {
+    throw new ApiError(403, "User is not logged in");
+  }
 
-   const currUser=await User.findById(userId);
-   if(!currUser){
-    throw new ApiError(404,"User not found")
-   }
-   if(currUser.watchHistory.length===0){
-    throw new ApiError(400,"No Watch History Found")
-   }
-   currUser.watchHistory=[];
-   await currUser.save();
-   res.status(200).json(new ApiResponse(200,"Watch History cleared successfully"))
-
-})
+  const currUser = await User.findById(userId);
+  if (!currUser) {
+    throw new ApiError(404, "User not found");
+  }
+  if (currUser.watchHistory.length === 0) {
+    throw new ApiError(400, "No Watch History Found");
+  }
+  currUser.watchHistory = [];
+  await currUser.save();
+  res
+    .status(200)
+    .json(new ApiResponse(200, "Watch History cleared successfully"));
+});
 
 const deleteAccount = asyncHandler(async (req, res) => {
   const userId = req.user._id;
@@ -662,5 +672,5 @@ export {
   getWatchHistory,
   deleteAccount,
   updateWatchHistory,
-  clearAllWatchHistory
+  clearAllWatchHistory,
 };
