@@ -71,13 +71,7 @@ useEffect(() => {
   if (user && user._id) {
     findVideoData();
   }
-}, [user._id]);
-  
-
-useEffect(()=>{
-  console.log("user : ",user);
-  console.log("videoData : ",videoData);
-},[user,videoData])
+}, [user?._id]);
 
 
   const [currentTab, setCurrentTab] = useState("UserVideos");
