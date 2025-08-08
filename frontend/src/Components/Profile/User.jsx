@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import UserVideos from "./UserVideos";
 import Playlist from "../PlayList/Playlist.jsx";
 import SubscriptionTab from "./SubscriptionTab.jsx";
@@ -45,6 +45,7 @@ const User = () => {
 
   const fetchUser = async () => {
       try {
+        console.log("Hello world -1");
         setLoading(true);
         console.log("Hello world");
         
@@ -57,9 +58,12 @@ const User = () => {
           setUser({});
         }
       } catch (error) {
+        console.log("Hello duniya");
         console.log(error.message);
         setUser({});
       }finally{
+        console.log("Hello finally");
+        
         setLoading(false);
       }
     };
