@@ -48,6 +48,28 @@ function App() {
   },
 ]);
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const handleStorageChange = () => {
+            const updatedUser = localStorage.getItem("userData");
+            if (updatedUser) {
+                dispatch(loggedInUser(JSON.parse(updatedUser)));
+            } else {
+                dispatch(logOutUser());
+            }
+        };
+
+        window.addEventListener("storage", handleStorageChange);
+
+        const rawUser = localStorage.getItem("userData");
+        if (rawUser) dispatch(loggedInUser(JSON.parse(rawUser)));
+
+        return () => {
+          window.removeEventListener("storage", handleStorageChange);
+        };
+    }, [dispatch]);
+
 
   return (
     <>
