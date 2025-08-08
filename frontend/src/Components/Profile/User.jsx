@@ -24,47 +24,48 @@ const User = () => {
   
   const [videoData,setVideoData]=useState([]);
 
-  const findVideoData = async () => {
-  try {
-    setLoading(true);
-    const response = await videos.getUserVideos(user._id);
-
-    if (response.data?.statusCode === 200) {
-      setVideoData(response.data.data);
-    } else {
-      toast.error(`${response.data?.message || "Failed to fetch videos"}`);
-    }
-  } catch (error) {
-    console.log(error);
-    toast.error('Something went wrong');
-  } finally {
-    setLoading(false);
-  }
-};
-
-  const fetchUser = async () => {
-      try {
-        setLoading(true);
-        const currUser = await UserObject.getUserProfile(userName);
-
-       if ( currUser && currUser.data!==null && currUser?.statusCode === 200 ){
-          setUser(currUser.data);
-        } else {
-          setUser({});
-        }
-      } catch (error) {
-        console.log(error.message);
-        setUser({});
-      }finally{
-        setLoading(false);
+  const findVideoData=async()=>{
+    try {
+      setLoading(true);
+      
+      const response=await videos.getUserVideos(user._id);
+      
+      if(response && response.data && response.statusCode===200){
+        setVideoData(response.data);
+      }else{
+        toast.error(`${response.message}`)
       }
-    };
+    } catch (error) {
+       console.log(error);
+       toast.error('Something went wrong');
+    }finally{
+      setLoading(false);
+    }
+  }
+
+  // const fetchUser = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const currUser = await UserObject.getUserProfile(userName);
+
+  //      if ( currUser && currUser.data!==null && currUser?.statusCode === 200 ){
+  //         setUser(currUser.data);
+  //       } else {
+  //         setUser({});
+  //       }
+  //     } catch (error) {
+  //       console.log(error.message);
+  //       setUser({});
+  //     }finally{
+  //       setLoading(false);
+  //     }
+  //   };
 
   
 
-  useEffect(() => {
-  fetchUser();
-}, [userName]);
+//   useEffect(() => {
+//   fetchUser();
+// }, [userName]);
 
 useEffect(() => {
   if (user && user._id) {
