@@ -15,14 +15,12 @@ import { upload } from '../middlewares/multer.middleware.js';
 
 const router = Router();
 
-router.use(auth);
-
-router.post('/', upload.none(),createPlaylist);
+router.post('/', auth,upload.none(),createPlaylist);
 router.get('/user/:userId', getUserPlaylists);
-router.get('/:playlistId', getPlaylistById);
-router.patch('/:playlistId/videos/:videoId', addVideoToPlaylist);
-router.delete('/:playlistId/videos/:videoId', removeVideoFromPlaylist);
-router.post('/:playlistId',upload.none(), updatePlaylist);
-router.delete('/:playlistId', deletePlaylist);
+router.get('/:playlistId',auth, getPlaylistById);
+router.patch('/:playlistId/videos/:videoId', auth,addVideoToPlaylist);
+router.delete('/:playlistId/videos/:videoId',auth, removeVideoFromPlaylist);
+router.post('/:playlistId',upload.none(),auth, updatePlaylist);
+router.delete('/:playlistId',auth, deletePlaylist);
 
 export default router;
