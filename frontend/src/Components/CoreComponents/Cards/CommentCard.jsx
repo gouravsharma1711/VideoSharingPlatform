@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import getTimeAgo from "../../utils/getTimeAgo";
+import getTimeAgo from "../../../utils/getTimeAgo";
 import { toast } from "react-toastify";
-import commentsObject from "../../backendUtility/comments.utility";
-import Likes from "../../backendUtility/likes.utility";
-import like from "../../backendUtility/likes.utility";
+import commentsObject from "../../../backendUtility/comments.utility";
+import Likes from "../../../backendUtility/likes.utility";
+import like from "../../../backendUtility/likes.utility";
 
 function CommentCard({ comment, FetchComment }) {
   const [isCommentLiked, setIsCommentLiked] = useState(false);

@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import FormInput from "../../Signup/FormInput";
-import FormLabel from "../../Signup/FormLabel";
+import FormInput from "../../CoreComponents/FormInput";
+import FormLabel from "../../CoreComponents/FormLabel";
 import videos from "../../../backendUtility/videos.utility";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import LoadingSpinner from "../LoadingSpinner";
+import LoadingSpinner from "../../Loading/LoadingSpinner";
 
 const UploadIcon = () => (
   <i class="fa-solid fa-cloud-arrow-up"></i>

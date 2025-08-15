@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import PlayListCard from "../Profile/PlayListCard";
+import PlayListCard from "../CoreComponents/Cards/PlayListCard.jsx";
 import playlist from "../../backendUtility/playlist.utility.js";
 import { toast } from "react-toastify";
 import Loading from "../Loading/Loading.jsx";

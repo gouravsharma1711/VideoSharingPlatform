@@ -1,4 +1,4 @@
-import getTimeAgo from '../../utils/getTimeAgo'
+import getTimeAgo from '../../../utils/getTimeAgo'
 function SuggestedVideoCard({ video }) {
     return (
         <div className="group flex gap-4 cursor-pointer p-3 rounded-xl hover:bg-slate-700/30 transition-all duration-300 hover:scale-[1.02] border border-transparent hover:border-purple-500/20">

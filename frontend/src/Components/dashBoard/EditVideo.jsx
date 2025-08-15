@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import videos from "../../backendUtility/videos.utility";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../Loading/LoadingSpinner";
 import { toast } from "react-toastify";
 
 const UploadIcon = () => {

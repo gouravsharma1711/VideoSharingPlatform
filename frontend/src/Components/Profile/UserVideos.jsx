@@ -1,5 +1,5 @@
 import React from 'react'
-import Card from '../Home/Card.jsx'
+import Card from '../CoreComponents/Cards/Card.jsx'
 import VideosView from '../Home/VideosView.jsx'
 
 

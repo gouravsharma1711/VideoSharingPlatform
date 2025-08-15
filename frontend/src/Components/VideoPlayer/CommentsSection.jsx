@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import CommentCard from "./CommentCard.jsx";
+import CommentCard from "../CoreComponents/Cards/CommentCard.jsx";
 import { useParams } from "react-router-dom";
 import commentsObject from "../../backendUtility/comments.utility.js";
 import { toast } from "react-toastify";

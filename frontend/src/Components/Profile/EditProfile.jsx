@@ -1,10 +1,10 @@
 import { useState } from "react";
-import FormLabel from "../Signup/FormLabel";
-import FormInput from "../Signup/FormInput";
+import FormLabel from "../CoreComponents/FormLabel";
+import FormInput from "../CoreComponents/FormInput";
 import ChangePassword from "./changePassword";
 import userObject from "../../backendUtility/user.utility";
 import { toast } from "react-toastify";
-import LoadingSpinner from "../dashBoard/LoadingSpinner";
+import LoadingSpinner from "../Loading/LoadingSpinner";
 
 const UserProfile = ({ onClose, user }) => {
   const [coverImage, setCoverImage] = useState(user.coverImage);

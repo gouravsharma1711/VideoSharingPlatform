@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import DashBoardHeader from "../dashBoard/DashBoardHeader.jsx";
-import StatCard from "./StatCard.jsx";
+import StatCard from "../CoreComponents/Cards/StatCard.jsx";
 import VideoTable from "./VideoTable.jsx";
 import UploadVideo from "./UploadComponent/UploadVideo";
 import dashboard from "../../backendUtility/dashboard.utility.js";
 import videos from "../../backendUtility/videos.utility.js";
 import { toast } from 'react-toastify';
-import LoadingSpinner from "./LoadingSpinner.jsx";
+import LoadingSpinner from "../Loading/LoadingSpinner.jsx";
 import EditVideo from "./EditVideo.jsx";
 import { useSelector,useDispatch } from "react-redux";
 import { toggleEdit } from "../../Features/DashBoard/videoEditingButton.Slice.js";

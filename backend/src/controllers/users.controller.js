@@ -7,8 +7,10 @@ import {
   PlayList,
   Subscription,
 } from "../models/index.js";
+
 import ApiResponse from "../utils/ApiResponse.js";
 import ApiError from "../utils/ApiError.js";
+
 import {
   uplordOnCloudinary,
   deleteFromCloudinary,
@@ -50,7 +52,7 @@ const signUpUser = asyncHandler(async (req, res) => {
   // create a user Object
   // save the data on db
   // send the status code and response
-
+  
   const { userName, email, fullName, password } = req.body;
 
   if (
@@ -152,6 +154,8 @@ const logInUser = asyncHandler(async (req, res) => {
 
   const isPasswordCorrect = await user.isPasswordCorrect(password);
   if (!isPasswordCorrect) {
+    console.log(new ApiError(401,"Incorrect Password"));
+        
     throw new ApiError(401, "Incorrect Password");
   }
 

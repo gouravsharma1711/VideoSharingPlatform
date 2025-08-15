@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import LoadingSpinner from '../dashBoard/LoadingSpinner';
+import LoadingSpinner from './LoadingSpinner';
 
 function ImageLoader({ src, alt, className, fallbackSrc = "https://cdn.pixabay.com/photo/2019/08/11/18/59/icon-4399701_1280.png" }) {
     const [loading, setLoading] = useState(true);

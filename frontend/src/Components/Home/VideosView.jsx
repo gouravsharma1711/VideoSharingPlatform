@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Card from './Card.jsx'
+import Card from '../CoreComponents/Cards/Card.jsx'
 import videos from '../../backendUtility/videos.utility.js';
 function VideosView({videoData=[]}) {
     

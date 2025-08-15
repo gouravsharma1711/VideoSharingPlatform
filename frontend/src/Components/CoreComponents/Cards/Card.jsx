@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {useSelector} from 'react-redux'
 import { Link } from "react-router-dom";
-import { ImageLoader, VideoLoader } from '../Loading/MediaLoader.jsx';
-import videos from "../../backendUtility/videos.utility.js";
-import userObject from "../../backendUtility/user.utility.js";
+import { ImageLoader, VideoLoader } from '../../Loading/MediaLoader.jsx';
+import videos from "../../../backendUtility/videos.utility.js";
+import userObject from "../../../backendUtility/user.utility.js";
 function Card({ item }) {
   const user=useSelector((state)=>state.user.userData)
   const [isHovered, setIsHovered] = useState(false);

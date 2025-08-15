@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import VideoCard from "./VideoCard";
+import VideoCard from "../CoreComponents/Cards/VideoCard";
 
 export default function VideoCardList({ videos }) {
   return (

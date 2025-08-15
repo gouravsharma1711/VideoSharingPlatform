@@ -10,10 +10,10 @@ class User {
 
     async registerUser(formData) {
         try {
-            const { data } = await axiosInstance.post("/signup", formData, {
+            const response  = await axiosInstance.post("/signup", formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-            return data;
+            return response.data;
         } catch (error) {
             console.error("Error registering user:", error);
             throw error;
@@ -21,11 +21,9 @@ class User {
     }
 
     async logInUser({ email, userName, password }) {
-        console.log(`email : ${email}, userName : ${userName} ,password : ${password}  `);
         
         try {
             const response = await axiosInstance.post("/login", { email, userName, password });
-            console.log("Response received:", response.data);
             return response.data;
         } catch (error) {
             console.error("Login error:", error);

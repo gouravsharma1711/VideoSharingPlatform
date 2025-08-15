@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import CreatorProfileCard from "./CreatorProfileCard";
+import CreatorProfileCard from "../CoreComponents/Cards/CreatorProfileCard";
 import PlaylistSidebar from "./PlaylistSidebar";
 import playlistUtility from "../../backendUtility/playlist.utility";
 import { toast } from "react-toastify";

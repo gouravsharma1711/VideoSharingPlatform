@@ -11,10 +11,11 @@ function FormInput(
         isRequired=false,
         onChange=()=>{},
         canChange=true,
+        ...rest
     }
 ) {
     return (
-        <input type={type} value={value} name={name} id={id} className={customClass} placeholder={placeholder} required={isRequired} onChange={onChange} disabled={!canChange} />
+        <input type={type} value={value} name={name} id={id} className={customClass} placeholder={placeholder} required={isRequired} onChange={onChange} disabled={!canChange} {...rest} />
     );
 }
 

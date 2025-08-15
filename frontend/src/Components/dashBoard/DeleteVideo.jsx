@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import videos from "../../backendUtility/videos.utility";
-import { ClipLoader } from "react-spinners";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../Loading/LoadingSpinner";
 
 const DeleteVideo = ({ onCancel, videoId }) => {
   const [isUploading, setIsUploading] = useState(false);

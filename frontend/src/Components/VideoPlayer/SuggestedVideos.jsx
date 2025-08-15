@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import SuggestedVideoCard from "./SuggestedVideoCard.jsx";
+import SuggestedVideoCard from "../CoreComponents/Cards/SuggestedVideoCard.jsx";
 import videos from "../../backendUtility/videos.utility.js";
 import Loading from "../Loading/Loading.jsx";
 import { Link } from "react-router-dom";

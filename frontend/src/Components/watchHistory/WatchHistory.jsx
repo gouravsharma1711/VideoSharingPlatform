@@ -1,10 +1,8 @@
 import VideosView from '../Home/VideosView.jsx'
 import user from '../../backendUtility/user.utility.js'
 import { useEffect, useState, useCallback } from 'react'
-import LoadingSpinner from '../dashBoard/LoadingSpinner.jsx'
 import {toast} from "react-toastify";
-import { useDispatch, useSelector } from 'react-redux';
-import {toggleisHistoryStatus} from '../../Features/WatchHistory/history.slice.js'
+import { useSelector } from 'react-redux';
 import AuthWrapper from '../Auth/AuthWrapper.jsx';
 import Loading from '../Loading/Loading.jsx';
 function WatchHistory() {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import User from '../../backendUtility/user.utility'
 import {toast} from 'react-toastify'
-import LoadingSpinner from '../dashBoard/LoadingSpinner'
+import LoadingSpinner from '../Loading/LoadingSpinner'
 const ChangePassword = () => {
   const [formData, setFormData] = useState({
     currentPassword: "",

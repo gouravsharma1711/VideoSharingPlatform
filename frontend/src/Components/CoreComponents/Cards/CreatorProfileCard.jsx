@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import playlist from "../../backendUtility/playlist.utility";
-import UpdatePlaylist from "../Profile/UpdatePlaylist";
+import playlist from "../../../backendUtility/playlist.utility";
+import UpdatePlaylist from "../../Profile/UpdatePlaylist";
 import { useSelector } from "react-redux";
 export default function CreatorProfileCard({ name, avatar, playlist }) {
   const [isUpdateButtonClicked, setIsUpdateButtonClicked] = useState(false);
