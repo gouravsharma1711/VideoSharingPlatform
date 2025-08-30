@@ -5,7 +5,7 @@ export default function VideoCard({ video }) {
       <img
         src={video.thumbnail}
         alt={video.title}
-        className="w-full sm:w-64 rounded-lg object-cover"
+        className="w-full sm:w-64 rounded-lg object-center h-[10rem]"
       />
 
       {/* Details */}

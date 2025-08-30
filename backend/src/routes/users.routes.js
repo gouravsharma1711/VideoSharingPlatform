@@ -18,7 +18,7 @@ import {
     getWatchHistory,
     deleteAccount,
     updateWatchHistory,
-    clearAllWatchHistory
+    clearAllWatchHistory,getAllUsers
 
 } from '../controllers/users.controller.js'
 
@@ -40,5 +40,6 @@ router.route('/watchHistory').get(auth,getWatchHistory);
 router.route('/profile/:userName').get(getUserChannelProfile);
 router.route('/updateWatchHistory/:videoId').get(upload.none(),auth,updateWatchHistory);
 router.route('/clear-History').delete(auth,clearAllWatchHistory)
+router.route('/').get(getAllUsers)
 
 export default router;

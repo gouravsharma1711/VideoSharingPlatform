@@ -367,7 +367,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
       new: true,
       runValidators: true,
     }
-  );
+  ).select("-password -refreshToken")
 
   if (!user) {
     throw new ApiError(500, "Failed to update account details");
@@ -527,6 +527,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
               description: 1,
               duration: 1,
               createdAt: 1,
+              views: 1,
             },
           },
         ],
@@ -662,6 +663,21 @@ const updateWatchHistory = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, "Watch history updated successfully"));
 });
+
+const getAllUsers = asyncHandler(async (req, res) => {
+  let users = await User.find({}).select('-password -refreshToken -accessToken')
+
+  console.log("User : ",users);
+  
+  if (!users || users.length === 0) {
+    return res.status(200).json(new ApiResponse(200, 'No Users Found', []))
+  }
+
+  res.status(200).json(
+    new ApiResponse(200, 'All users', users)
+  )
+})
+
 export {
   signUpUser,
   logoutUser,
@@ -674,6 +690,7 @@ export {
   updateAccountDetails,
   getUserChannelProfile,
   getWatchHistory,
+  getAllUsers,
   deleteAccount,
   updateWatchHistory,
   clearAllWatchHistory,

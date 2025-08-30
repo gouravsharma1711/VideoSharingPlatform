@@ -1,65 +1,53 @@
-import VideosView from "./VideosView.jsx";
-import { useState, useEffect, useRef, useCallback } from "react";
-import videos from "../../backendUtility/videos.utility.js";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import useApi from "../../Hooks/useApi.js";
+import videos from "../../backendUtility/videos.utility.js";
+import VideosView from "./VideosView.jsx";
+import LoadingSpinner from "../Loading/LoadingSpinner.jsx";
+import InfiniteScroll from "react-infinite-scroll-component";
+
 function Home() {
   const [videoData, setVideoData] = useState([]);
+  const { data, loading, error, request } = useApi(videos.getAllVideos);
+  const navigate = useNavigate();
+  const location = useLocation();
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const observer = useRef();
-
-  const location = useLocation();
-  const navigate=useNavigate()
+  const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
     if (location.state?.toastMessage) {
       toast.success(location.state.toastMessage);
       navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location.state, location.pathname, navigate]);
-
-  const fetchVideos = async (pageNum = 1) => {
-    try {
-      setLoading(true);
-      const response = await videos.getAllVideos({ page: pageNum });
-      if (response.statusCode === 200) {
-        const newVideos = response.data;
-        if (newVideos.length === 0) {
-          setHasMore(false); // no more data to fetch
-        } else {
-          setVideoData((prev) => [...prev, ...newVideos]);
-        }
-      }
-    } catch (error) {
-      console.log("Error fetching videos:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [location, navigate]);
 
   useEffect(() => {
-    fetchVideos(page);
+    setIsFetching(true);
+    request({ page });
   }, [page]);
 
-  const lastVideoRef = useCallback(
-    (node) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setPage((prev) => prev + 1);
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [loading, hasMore]
-  );
+  useEffect(() => {
+    if (data) {
+      if (data.length < 10) {
+        setHasMore(false);
+      }
+      setVideoData((prevVideos) => [...prevVideos, ...data]);
+    }
+    setIsFetching(false);
+  }, [data]);
+
+  const loadMoreVideos = () => {
+    const timeOutId=setTimeout(()=>{
+      setPage((prev) => prev + 1);
+    },500)
+    return ()=>clearTimeout(timeOutId)
+  };
 
   return (
-    <div className="px-5 min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black mt-10">
-      <div className="mb-8">
+    <div className="px-5 min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black pt-20">
+      <div className="mb-4">
         <h1 className="text-3xl font-bold text-white mb-2 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
           Trending Videos
         </h1>
@@ -68,18 +56,43 @@ function Home() {
         </p>
       </div>
 
-      <VideosView videoData={videoData} lastVideoRef={lastVideoRef} />
-
-      {loading && (
-        <div className="text-center text-gray-300 mt-5">
-          Loading more videos...
+      {error && (
+        <div className="text-center text-red-500 mt-5 p-4">
+          Could not load videos. Please try again later.
         </div>
       )}
 
-      {!hasMore && (
-        <div className="text-center text-gray-400 mt-5">
-          No more videos to show
+      {loading && page === 1 && (
+        <div className="min-h-[40vh] flex flex-col gap-2 items-center justify-center text-white">
+          <LoadingSpinner size={50} />
+          <p>Fetching Data...</p>
         </div>
+      )}
+
+      {!isFetching && videoData.length === 0 && (
+        <div className="text-center text-gray-400 mt-5 p-4">
+          No videos found.
+        </div>
+      )}
+
+      {videoData.length > 0 && (
+        <InfiniteScroll
+          dataLength={videoData.length}
+          next={loadMoreVideos}
+          hasMore={hasMore}
+          loader={
+            <div className="flex flex-col justify-center items-center py-4">
+              <span className="ml-2 text-white ">Fetching More Data...</span>
+              <br />
+              <LoadingSpinner size={50} />
+            </div>
+          }
+          endMessage={
+            <p className="text-center text-gray-400 mt-5 p-4">No more videos!</p>
+          }
+        >
+          <VideosView videoData={videoData} />
+        </InfiniteScroll>
       )}
     </div>
   );

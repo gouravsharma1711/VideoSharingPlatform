@@ -33,7 +33,7 @@ export default function PlaylistPage() {
   }, [playlistId]);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-black text-white">
+    <div className="flex flex-col md:flex-row min-h-screen bg-black text-white pt-20">
       
       <div className="md:w-[38%] w-full flex flex-col items-start px-6 pt-8 pb-6">
         <h1 className="text-3xl my-4 font-bold text-white text-center md:text-left">

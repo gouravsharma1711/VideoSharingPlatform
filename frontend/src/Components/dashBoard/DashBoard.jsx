@@ -5,94 +5,60 @@ import VideoTable from "./VideoTable.jsx";
 import UploadVideo from "./UploadComponent/UploadVideo";
 import dashboard from "../../backendUtility/dashboard.utility.js";
 import videos from "../../backendUtility/videos.utility.js";
-import { toast } from 'react-toastify';
 import LoadingSpinner from "../Loading/LoadingSpinner.jsx";
 import EditVideo from "./EditVideo.jsx";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { toggleEdit } from "../../Features/DashBoard/videoEditingButton.Slice.js";
+import useApi from "../../Hooks/useApi.js";
 
 const ViewsIcon = () => <i className="fa-regular fa-eye"></i>;
 const FollowersIcon = () => <i className="fa-solid fa-user"></i>;
 const LikesIcon = () => <i className="fa-solid fa-thumbs-up"></i>;
 
 function Dashboard() {
-  const [dashBoardData, setDashBoardData] = useState(null);
   const [isUploadClicked, setIsUploadClicked] = useState(false);
-  const [videoData, setVideoData] = useState([]);
-  const isEditing=useSelector(state=>state.videoEditing.isEditing);
-  
-  const dispatch=useDispatch();
+  const isEditing = useSelector((state) => state.videoEditing.isEditing);
+  const dispatch = useDispatch();
 
-  const fetchStats = async () => {
-    try {
-      const responseData = await dashboard.getCurrentStats();
-      if (!responseData || responseData.statusCode !== 200) {
-        return;
-      }
-      else{
-        setDashBoardData(responseData.data);
-      }
-    } catch (error) {
-      console.error("Error in fetching stats:", error.message);
-      toast.error(error.response?.data?.message);
-    }
-  };
+  const { data: dashBoardData, request: fetchStats } = useApi(dashboard.getCurrentStats);
+  const { data: videoData, request: fetchVideos } = useApi(videos.getCurrentUserVideos);
 
-  const fetchVideosData = async () => {
-    try {
-      const responseData = await videos.getCurrentUserVideos();
-      if (responseData?.statusCode !== 200) {
-        toast.error(responseData?.message);
-      }
-      else {
-        setVideoData(responseData?.data || []);
-      }
-    } catch (error) {
-      console.error("Error in fetching video :", error.message);
-      toast.error(error.response?.data?.message);
-    }
-  };
-
-  const refreshDashboard = () => {
-    fetchStats();
-    fetchVideosData();
-  };
-
+  const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
-    refreshDashboard();
+    const loadInitial = async () => {
+      await fetchStats();
+      await fetchVideos();
+      setInitialLoading(false);
+    };
+    loadInitial();
+
     const intervalId = setInterval(() => {
-      refreshDashboard();
-    }, 3000);
+      fetchStats();
+      fetchVideos();
+    }, 30000); // refresh silently every 30s
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [fetchStats, fetchVideos]);
 
-  // Derive from state directly
   const likes = dashBoardData?.totalLikes ?? 0;
   const views = dashBoardData?.totalViews ?? 0;
   const subscribers = dashBoardData?.totalSubscribers ?? 0;
-   
-  
 
-  if (!dashBoardData) {
+  if (initialLoading) {
     return (
-      <div className="min-h-screen flex  flex-col gap-2 items-center justify-center text-white">
-         <LoadingSpinner size={50}/>
-         Fetching Data...
+      <div className="min-h-screen flex flex-col gap-2 items-center justify-center text-white">
+        <LoadingSpinner size={50} />
+        Fetching Data...
       </div>
     );
   }
-  
 
   return (
-    
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black p-4 sm:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+      <div className="max-w-7xl mx-auto space-y-8 pt-20">
         <div className="bg-slate-800/30 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-          <DashBoardHeader
-            setIsUploadClicked={setIsUploadClicked}
-          />
+          <DashBoardHeader setIsUploadClicked={setIsUploadClicked} />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -123,24 +89,17 @@ function Dashboard() {
         </div>
 
         <div className="bg-slate-800/30 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-          <VideoTable
-            videos={videoData || []}
-          />
+          <VideoTable videos={videoData || []} />
         </div>
       </div>
 
       {isUploadClicked && (
         <div className="fixed inset-0 z-[150] flex justify-center items-center bg-black bg-opacity-70 overflow-y-auto px-4 py-8">
-          <UploadVideo
-            setIsUploadClicked={setIsUploadClicked}
-          />
+          <UploadVideo setIsUploadClicked={setIsUploadClicked} />
         </div>
       )}
-      {
-      isEditing && (
-      <EditVideo onCancel={() => dispatch(toggleEdit())} />
-      )}
-      
+
+      {isEditing && <EditVideo onCancel={() => dispatch(toggleEdit())} />}
     </div>
   );
 }

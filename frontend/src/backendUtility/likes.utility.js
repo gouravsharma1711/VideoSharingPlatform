@@ -36,18 +36,10 @@ class Likes{
         }
     }
 
-    async getLikesVideos({page=1,limit=10}={}){
+    async getLikesVideos(){
         try {
+            const response = await axiosInstance.get(`/videos`);
             
-            const response =await axiosInstance.get(
-                `/videos`,
-                {
-                    params:{
-                        page,
-                        limit
-                    }
-                }   
-            );
             return response.data;
 
         } catch (error) {

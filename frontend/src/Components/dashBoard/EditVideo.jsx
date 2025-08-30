@@ -72,14 +72,24 @@ const EditVideo = ({ onCancel }) => {
     }
   };
 
-  const handleDetailsUpdate = () => {
-    // Handle title/description update logic here
-    console.log("Update Title & Description:", { title, description });
+  const handleDetailsUpdate = async(e) => {
+    e.preventDefault();
+    const response=await videos.updateVideo({ 
+      title:e.target.title.value,
+      description:e.target.description.value, 
+      videoId :videoData._id
+    });
+    if(response.statusCode===200){
+      toast.success("Video details updated successfully")
+    }else{
+      toast.error(response?.message||"something went wrong")
+    }
+    onCancel()
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="bg-gradient-to-br from-slate-800/95 via-slate-900/95 to-black/95 backdrop-blur-md border border-gray-700/50 text-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto border ">
+      <div className="bg-gradient-to-br from-slate-800/95 via-slate-900/95 to-black/95 backdrop-blur-md border  border-gray-700/50 text-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto " style={{scrollbarWidth:"none"}}>
         
         {/* Header */}
         <div className="sticky top-0 bg-slate-800/80 backdrop-blur-md border-b border-gray-700/50 p-6 rounded-t-2xl">
@@ -239,7 +249,7 @@ const EditVideo = ({ onCancel }) => {
               </h3>
             </div>
 
-            <div className="space-y-6">
+            <form className="space-y-6" onSubmit={handleDetailsUpdate}>
               <div>
                 <label htmlFor="title" className="block text-sm font-medium mb-3 text-gray-300">
                   <i className="fa-solid fa-heading mr-2 text-purple-400"></i>
@@ -248,6 +258,7 @@ const EditVideo = ({ onCancel }) => {
                 <input
                   id="title"
                   type="text"
+                  name="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Enter an engaging video title..."
@@ -266,6 +277,7 @@ const EditVideo = ({ onCancel }) => {
                 </label>
                 <textarea
                   id="desc"
+                  name="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Describe your video content, what viewers can expect..."
@@ -279,7 +291,7 @@ const EditVideo = ({ onCancel }) => {
 
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <button
-                  onClick={handleDetailsUpdate}
+                  type="submit"
                   className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-blue-500/25 flex-1 sm:flex-none"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
@@ -290,6 +302,7 @@ const EditVideo = ({ onCancel }) => {
                 </button>
 
                 <button
+                  type="button"
                   onClick={onCancel}
                   className="group bg-slate-600/50 hover:bg-slate-500/50 border border-gray-600/50 hover:border-gray-500/50 text-gray-300 hover:text-white px-8 py-3 rounded-xl transition-all duration-300 hover:scale-105 flex-1 sm:flex-none"
                 >
@@ -299,7 +312,7 @@ const EditVideo = ({ onCancel }) => {
                   </span>
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@ function NavBar() {
     };
 
     return (
-        <div className="relative">
+        <div className="fixed top-0 w-full z-50">
             <SideBar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
             
             <div className={`relative transition-all duration-300 ease-in-out ${isSidebarOpen ? 'sm:ml-64' : ''}`}>

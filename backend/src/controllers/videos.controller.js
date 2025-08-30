@@ -4,6 +4,7 @@ import ApiError from '../utils/ApiError.js';
 import {Video,User,Comment,Like,PlayList} from '../models/index.js';
 import {uplordOnCloudinary,deleteFromCloudinary} from '../utils/cloudinary.js'
 import mongoose from 'mongoose';
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 
 const getCurrentUserVideos=asyncHandler(async(req,res)=>{
     const user=req.user;
@@ -171,7 +172,7 @@ const getUserVideos=asyncHandler(async(req,res)=>{
 })
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 10, userId } = req.query
+    const { page = 1, limit = 10 } = req.query
     console.log("I'm Getting the request from the frontend ");
     const pipeline=[
         {
@@ -254,6 +255,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         new ApiResponse(200,"Successfully Video is Fetched",videos.docs)
     )
 })
+
 
 const publishVideo = asyncHandler(async (req, res) => {
     const { title, description} = req.body

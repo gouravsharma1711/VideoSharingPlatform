@@ -5,14 +5,19 @@ import ChangePassword from "./changePassword";
 import userObject from "../../backendUtility/user.utility";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../Loading/LoadingSpinner";
+import {loggedInUser} from '../../Features/User/User.slice'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from "react-router-dom";
 
-const UserProfile = ({ onClose, user }) => {
+
+const UserProfile = ({ onClose, user,fetchUser }) => {
   const [coverImage, setCoverImage] = useState(user.coverImage);
   const [avatar, setAvatar] = useState(user.avatar);
   const [isUpdatingProfile,setIsUpadtingProfile]=useState(false);
-
+  const navigate=useNavigate();
   const [isCoverImageLoading, setIsCoverImageLoading] = useState(false);
   const [isAvatarImageLoading, setIsAvatarImageLoading] = useState(false);
+  const dispatch=useDispatch();
 
   const [formData, setFormData] = useState({
     userName: user.userName,
@@ -26,10 +31,12 @@ const UserProfile = ({ onClose, user }) => {
       const form = new FormData();
       form.append("coverImage", e.target?.files[0]);
       const response = await userObject.updateCoverImage(form);
-      console.log("Cover image : ", response);
       if (response.statusCode === 200) {
         toast.success(response.message);
+        dispatch(loggedInUser(response.data));
         setCoverImage(response.data.coverImage);
+        onClose();
+        fetchUser(response.data.userName);
       }
     } catch (error) {
       toast.error(error.message);
@@ -47,6 +54,9 @@ const UserProfile = ({ onClose, user }) => {
       if (response.statusCode === 200) {
         toast.success(response.message);
         setAvatar(response.data.avatar);
+        dispatch(loggedInUser(response.data));
+        fetchUser(response.data.userName);
+        onClose();
       }
     } catch (error) {
       toast.error(error.message);
@@ -73,7 +83,10 @@ const UserProfile = ({ onClose, user }) => {
       console.log("Response : ",response);
       
       if(response.statusCode===200){
-        toast.success("Profile Details Update SuccessFully")
+        toast.success("Profile Details Update SuccessFully");
+        dispatch(loggedInUser(response.data));
+        onClose();
+        navigate(`/user/${response.data.userName}`);
       }else{
         toast.error("Something went wrong")
       }

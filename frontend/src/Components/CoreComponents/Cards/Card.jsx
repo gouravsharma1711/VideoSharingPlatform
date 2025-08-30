@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {useSelector} from 'react-redux'
-import { Link } from "react-router-dom";
 import { ImageLoader, VideoLoader } from '../../Loading/MediaLoader.jsx';
 import videos from "../../../backendUtility/videos.utility.js";
 import userObject from "../../../backendUtility/user.utility.js";
@@ -10,8 +9,6 @@ function Card({ item }) {
   const [isHovered, setIsHovered] = useState(false);
   const Navigate = useNavigate();
 
-  const title =
-    "Here is your Title, My first Video | Gourav Sharma | Shardha Kapoor | Sajna Kapoor | Ranjeet Kumar";
 
   const HandleNavigateToVideoPage = () => {
     videos.getSingleView(item._id)
@@ -29,7 +26,7 @@ function Card({ item }) {
 
   return (
     <div
-      className="group bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-2xl overflow-hidden text-white cursor-pointer transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 border border-gray-800/50 hover:border-purple-500/30"
+      className="group bg-gradient-to-br from-slate-900/50 to-gray-900/50 backdrop-blur-sm rounded-2xl overflow-hidden text-white cursor-pointer transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 border border-gray-800/50 hover:border-purple-500/30 origin-top"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={HandleNavigateToVideoPage}
@@ -46,7 +43,7 @@ function Card({ item }) {
             autoPlay
             muted
             loop
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-full   border transition-transform duration-700 group-hover:scale-110"
             poster={item?.thumbnail}
           />
         ) : (

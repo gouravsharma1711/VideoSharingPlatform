@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { use } from 'react';
 
 const axiosInstance = axios.create({
     baseURL: `${import.meta.env.VITE_API_BASE_URL}/api/v1/users`,
@@ -164,7 +163,18 @@ class User {
             throw error;
         }
     }
+    async getAllUsers(){
+        try{
+            const response= await axiosInstance.get('/users');
+            return response.data;
+        }catch(error){
+            console.error('Get all users error:',error);
+            throw error;
+        }
+    }
 }
 
+
 const userObject = new User();
+
 export default userObject;

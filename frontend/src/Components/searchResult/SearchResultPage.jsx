@@ -1,61 +1,77 @@
 import { useEffect, useState } from "react";
 import ChannelHeader from "./ChannelHeader";
 import VideoCardList from "./VideoCardList";
-import User from '../../backendUtility/user.utility'
+import User from "../../backendUtility/user.utility";
 import { useSearchParams } from "react-router-dom";
-import video from '../../backendUtility/videos.utility'
+import video from "../../backendUtility/videos.utility";
+import UserNotFound from "./ChannelNotFound";
+import ChannelNotFound from "./ChannelNotFound";
+import { useSelector } from "react-redux";
+
 export default function SearchResultPage() {
-  const [channel,setChannel]=useState({});
-  const [videos,setVideos]=useState([]);
+  const [channel, setChannel] = useState(null);
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+
   const [searchParams] = useSearchParams();
-    const query = searchParams.get("search_query");
-    
-  const searchChannel=async()=>{
+  const query = searchParams.get("search_query");
+
+  const searchChannel = async () => {
     try {
-  
+      setLoading(true);
+      setNotFound(false);
+
       const response = await User.getUserProfile(query);
-      
-      if(response.statusCode===200){
+
+      if (response && response.statusCode === 200 && response.data) {
         setChannel(response.data);
-        console.log(response.data);
-        
+      } else {
+        setChannel(null);
+        setNotFound(true);
       }
     } catch (error) {
-      console.log("Errror fetching data",error);
+      console.log("Error fetching channel:", error);
+      setChannel(null);
+      setNotFound(true);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  useEffect(()=>{
-    searchChannel()
-  },[query]);
-
-  const fetchVideo=async()=>{
+  const fetchVideo = async () => {
     try {
-      const response =await video.getUserVideos(channel?._id);
-      if(response.statusCode===200){
+      const response = await video.getUserVideos(channel?._id);
+      if (response && response.statusCode === 200) {
         setVideos(response.data);
-        console.log("Response : ",response.data);
-        
       }
     } catch (error) {
-      console.log(" Error in fetching videos :  ",error);
+      console.log("Error in fetching videos:", error);
     }
-  }
+  };
 
-  useEffect(()=>{
-     if (channel && channel._id) {
-    fetchVideo();
-  }
-  },[channel]);
+  useEffect(() => {
+    if (query) {
+      searchChannel();
+    }
+  }, [query]);
 
+  useEffect(() => {
+    if (channel && channel._id) {
+      fetchVideo();
+    }
+  }, [channel]);
 
-  if(!channel){
+  if (loading) {
     return (
-      <div className="h-screen w-full flex justify-center items-center flex-col gap-y-4 text-white text-xl">
-        <img src="https://res.cloudinary.com/dcs7eq5kf/image/upload/v1753995785/person_bkejva.png" className="w-[20%] h-[30%]" />
-        <h1>No user Found</h1>
+      <div className="flex justify-center items-center h-screen text-white">
+        <p className="text-lg animate-pulse">Loading channel...</p>
       </div>
-    )
+    );
+  }
+
+  if (notFound || !channel) {
+    return <ChannelNotFound message="The channel you searched for does not exist." />;
   }
 
   return (

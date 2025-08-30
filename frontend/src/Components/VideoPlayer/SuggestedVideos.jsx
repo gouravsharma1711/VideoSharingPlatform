@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, use } from "react";
 import SuggestedVideoCard from "../CoreComponents/Cards/SuggestedVideoCard.jsx";
 import videos from "../../backendUtility/videos.utility.js";
 import Loading from "../Loading/Loading.jsx";
-import { Link } from "react-router-dom";
+import {useNavigate} from 'react-router-dom';
+import Videos from '../../backendUtility/videos.utility.js'
+import User from '../../backendUtility/user.utility'
 
 const SuggestedVideos = () => {
   const [data, setData] = useState([]);
@@ -41,7 +43,35 @@ const SuggestedVideos = () => {
       setPage((prev) => prev + 1);
     }
   };
+  const navigate=useNavigate();
 
+  const addViews=async(videoId)=>{
+    try {
+        const response= await Videos.getSingleView(videoId);
+        if(response.statusCode!=200){
+          throw new Error('error in adding view')
+        }
+      } catch (error) {
+        console.log("Error from adding views: ",error);
+      }
+  }
+  const addToWatchHistory=async(videoId)=>{
+    try {
+      const response= await User.addToWatchHistory(videoId);
+      if(response.statusCode!=200){
+          throw new Error('error in adding video in watch history')
+        }
+    } catch (error) {
+      console.log("error in adding watch history : " ,error);
+      
+    }
+  }
+  const handleVideoClick=async(videoId)=>{
+    await addViews(videoId)
+    await addToWatchHistory(videoId)
+    navigate(`/videos/${videoId}`)
+
+  };
   return (
     <div className="bg-slate-800/30 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-4">
       <div className="flex items-center gap-3 mb-6">
@@ -58,7 +88,7 @@ const SuggestedVideos = () => {
         className="space-y-4 max-h-[600px] uploadVideoClass overflow-y-auto custom-scrollbar"
       >
         {data.map((video) => (
-          <Link to={`/videos/${video._id}`} key={video._id}><SuggestedVideoCard video={video}  /></Link>
+          <div  onClick={()=> handleVideoClick(video._id)}  key={video._id}><SuggestedVideoCard video={video}  /></div>
         ))}
 
         {loading && <Loading size={20} />}

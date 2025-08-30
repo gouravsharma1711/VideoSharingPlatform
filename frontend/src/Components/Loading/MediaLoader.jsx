@@ -15,7 +15,7 @@ function ImageLoader({ src, alt, className, fallbackSrc = "https://cdn.pixabay.c
     };
 
     return (
-        <div className="h-full w-full flex justify-center items-center">
+        <div className="h-full w-full flex justify-center items-center relative">
             {loading && (
                 <div className={`absolute inset-0 flex items-center justify-center bg-gray-800/50 backdrop-blur-sm ${className}`}>
                     <LoadingSpinner size={20} />
@@ -47,17 +47,17 @@ function VideoLoader({ src, className, poster, ...props }) {
     };
 
     return (
-        <div className="relative">
+        <div className="relative h-full w-full">
             {loading && (
                 <div className={`absolute inset-0 flex items-center justify-center bg-gray-800/50 backdrop-blur-sm rounded-lg ${className}`}>
-                    <div className="flex flex-col items-center gap-2">
+                    <div className="flex flex-col items-center gap-2 text-gray-400">
                         <LoadingSpinner size={25} />
-                        <span className="text-xs text-gray-400">Loading video...</span>
+                        <span className="text-xs">Loading video...</span>
                     </div>
                 </div>
             )}
             {error ? (
-                <div className={`flex items-center justify-center bg-gray-800/50 backdrop-blur-sm rounded-lg ${className}`}>
+                <div className={`absolute inset-0 flex items-center justify-center bg-gray-800/50 backdrop-blur-sm rounded-lg ${className}`}>
                     <div className="flex flex-col items-center gap-2 text-gray-400">
                         <i className="fa-solid fa-exclamation-triangle text-2xl"></i>
                         <span className="text-xs">Failed to load video</span>

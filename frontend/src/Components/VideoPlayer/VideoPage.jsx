@@ -8,6 +8,8 @@ import SuggestedVideos from "./SuggestedVideos.jsx";
 import { useParams } from "react-router-dom";
 import videos from "../../backendUtility/videos.utility";
 import { toast } from "react-toastify";
+import SaveToPlaylistModal from './SaveToPlaylistModal.jsx'
+
 function VideoPage() {
 
   const [isAddToPlaylistClicked,setIsAddToPlaylistClicked]=useState(false);
@@ -32,7 +34,7 @@ function VideoPage() {
   }, [videoId]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black text-gray-300">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black text-gray-300 pt-20">
       <div className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 xl:grid-cols-10 gap-6">
           {/* Left Section: Main Video and Info */}

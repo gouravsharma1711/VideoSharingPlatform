@@ -84,7 +84,6 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
 
 const getLikedVideos = asyncHandler(async (req, res) => {
     const user=req.user;
-    const {page=1,limit=10}=req.query
     if(!user){
         throw new ApiError(401,"Unauthorized User")
     }
@@ -159,20 +158,16 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         }  
         
     ]
-
+    const likedVideos=await Like.aggregate(pipeLine);
     
-    const options={
-        page:Math.max(parseInt(page), 1),
-        limit: Math.min(Math.max(parseInt(limit), 1), 100)
-    }
-    const VideosAggregate=Like.aggregate(pipeLine);
-    const likedVideos=await Like.aggregatePaginate(VideosAggregate,options)
-    if(!likedVideos || !likedVideos.docs || likedVideos.docs.length===0){
-        throw new ApiError(404,"No videos found")
+    if(!likedVideos || likedVideos.length===0){
+        return res.status(200).json(
+            new ApiResponse(200,"User does not liked any Videos",[])
+        )
     }
 
     res.status(200).json(
-        new ApiResponse(200,"Liked Videos Fetched SuccessFully ",likedVideos.docs)
+        new ApiResponse(200,"Liked Videos Fetched SuccessFully ",likedVideos)
     )
 })
 

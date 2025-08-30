@@ -20,7 +20,7 @@ import { upload } from '../middlewares/multer.middleware.js';
 
 // Get all videos
 router.route('/').get(getAllVideos);
-router.route('/user-videos').get(auth, getCurrentUserVideos); // add this in postman to test it
+router.route('/user-videos').get(auth, getCurrentUserVideos); 
 router.route('/:userId/videos').get(getUserVideos);
 router.route('/:videoId').get(getSingleView);
 router.route('/video/:id').get(getVideoById);

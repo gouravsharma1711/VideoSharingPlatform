@@ -19,19 +19,17 @@ class Videos {
     }
 
     async getAllVideos({ page = 1, limit = 10 } = {}) {
-        console.log("I got the request : ",page);
         try {
             const response = await axiosInstance.get(
                 `/`,
                 {
                     params: {
                         page,
-                        limit
+                        limit,
                     }
                 }
             );
             console.log(response.data);
-            
             return response.data;
         } catch (error) {
             console.error("getAllVideos error:", error);
@@ -75,6 +73,12 @@ class Videos {
     }
 
     async updateVideo({ title, description, videoId }) {
+        console.log("data recieved : ");
+        console.log(title);
+        console.log(description);
+        console.log(videoId);
+        
+        
         try {
             const response = await axiosInstance.patch(
                 `/update/${videoId}`,

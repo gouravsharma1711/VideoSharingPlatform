@@ -38,12 +38,6 @@ function SuggestedVideoCard({ video }) {
                     </div>
                 </div>
             </div>
-            
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button className="p-2 hover:bg-slate-600/50 rounded-lg transition-colors duration-300">
-                    <i className="fa-solid fa-ellipsis-vertical text-gray-400 hover:text-white"></i>
-                </button>
-            </div>
         </div>
     )
 }
