@@ -4,6 +4,15 @@ import videos from '../../../backendUtility/videos.utility';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+
+
+const randomImages=[
+  "https://images.pexels.com/photos/5699509/pexels-photo-5699509.jpeg",
+  "https://images.pexels.com/photos/3944091/pexels-photo-3944091.jpeg",
+  "https://images.pexels.com/photos/4418531/pexels-photo-4418531.jpeg",
+  "https://images.pexels.com/photos/3811155/pexels-photo-3811155.jpeg",
+  "https://images.pexels.com/photos/340103/pexels-photo-340103.jpeg"
+]
 export default function PlayListCard({ playlist = {}, handleDeletePlaylist }) {
   const [videoThumbnail, setThumbnail] = useState('');
   const currProfileUserName=useParams().userName;
@@ -36,7 +45,7 @@ export default function PlayListCard({ playlist = {}, handleDeletePlaylist }) {
       <div className="relative group rounded-xl overflow-hidden">
         {/* Delete Button */}
         {
-          currProfileUserName===loggedInUser.userName &&
+          loggedInUser && currProfileUserName===loggedInUser.userName &&
           <button
           onClick={handleDeletePlaylist}
           className="absolute top-2 right-2 z-20 p-2 bg-black/60 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-red-500"
@@ -50,7 +59,7 @@ export default function PlayListCard({ playlist = {}, handleDeletePlaylist }) {
 
         <Link to={`/user/playlist/${playlist._id}`}>
           <img
-            src={videoThumbnail || 'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=2048x2048&w=is&k=20&c=ohMtddTt7BppCvEUNGqJ9FRDyJqAdkzonVQ7KmWbTrg='}
+            src={videoThumbnail || randomImages[Math.floor(Math.random() * randomImages.length)]}
             alt={playlist.title}
             className="w-full h-48 object-cover"
           />

@@ -26,6 +26,7 @@ function Home() {
   useEffect(() => {
     setIsFetching(true);
     request({ page });
+    setIsFetching(false);
   }, [page]);
 
   useEffect(() => {
@@ -69,7 +70,7 @@ function Home() {
         </div>
       )}
 
-      {!isFetching && videoData.length === 0 && (
+      {!isFetching && !loading  && videoData.length === 0 && (
         <div className="text-center text-gray-400 mt-5 p-4">
           No videos found.
         </div>

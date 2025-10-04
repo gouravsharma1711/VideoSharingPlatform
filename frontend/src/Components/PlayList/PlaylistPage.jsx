@@ -4,10 +4,16 @@ import CreatorProfileCard from "../CoreComponents/Cards/CreatorProfileCard";
 import PlaylistSidebar from "./PlaylistSidebar";
 import playlistUtility from "../../backendUtility/playlist.utility";
 import { toast } from "react-toastify";
+
+const randomImages=[
+  "https://images.pexels.com/photos/5699509/pexels-photo-5699509.jpeg",
+  "https://images.pexels.com/photos/3944091/pexels-photo-3944091.jpeg",
+  "https://images.pexels.com/photos/4418531/pexels-photo-4418531.jpeg",
+  "https://images.pexels.com/photos/3811155/pexels-photo-3811155.jpeg",
+  "https://images.pexels.com/photos/340103/pexels-photo-340103.jpeg"
+]
 export default function PlaylistPage() {
   const { playlistId } = useParams();
-
-
   const [playlist, setPlaylist] = useState(null);
   const [videos, setVideos] = useState([]);
 
@@ -34,7 +40,6 @@ export default function PlaylistPage() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-black text-white pt-20">
-      
       <div className="md:w-[38%] w-full flex flex-col items-start px-6 pt-8 pb-6">
         <h1 className="text-3xl my-4 font-bold text-white text-center md:text-left">
             {playlist?.name}
@@ -51,7 +56,7 @@ export default function PlaylistPage() {
           <img
             src={
               videos[0]?.thumbnail ||
-              "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=2048x2048&w=is&k=20&c=ohMtddTt7BppCvEUNGqJ9FRDyJqAdkzonVQ7KmWbTrg="
+              randomImages[Math.floor(Math.random()*randomImages.length)]
             }
             alt="Playlist Cover"
             className="w-full h-56 object-cover"
@@ -62,8 +67,6 @@ export default function PlaylistPage() {
                 {playlist?.name}
               </div>
               <div className="text-xs text-gray-300 flex gap-2">
-                {playlist?.views || 0}
-                <span>•</span>
                 {new Date(playlist?.createdAt).toLocaleDateString("en-GB", {
                   day: "numeric",
                   month: "short",
@@ -87,7 +90,7 @@ export default function PlaylistPage() {
         </div>
       </div>
       {videos.length === 0 ? (
-        <div>No Video in this Playlist</div>
+        <div className="flex justify-center w-1/2 items-center  ">No Video in this Playlist</div>
       ) : (
         <PlaylistSidebar videos={videos} />
       )}

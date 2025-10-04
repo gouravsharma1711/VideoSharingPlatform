@@ -27,7 +27,7 @@ export default function CreatorProfileCard({ name, avatar, playlist }) {
       </Link>
       {currentProfileUserName === loggedInUser?.userName && (
         <button
-          className=" bg-purple-500 text-white hover:bg-purple-600  px-4 py-2 rounded-lg "
+          className=" bg-purple-500 text-white hover:bg-purple-600  px-2 py-2 rounded-lg "
           onClick={() => setIsUpdateButtonClicked((prev) => !prev)}
         >
           Update Playlist

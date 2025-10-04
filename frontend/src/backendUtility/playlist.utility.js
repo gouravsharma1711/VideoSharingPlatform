@@ -35,6 +35,7 @@ class Playlist{
         try {
             
             const response=await axiosInstance.get(`/${playlistId}`);
+            
             return response.data;
         } catch (error) {
             console.log("Error in fetching playlist by id : ",error);

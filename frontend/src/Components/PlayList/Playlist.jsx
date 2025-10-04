@@ -64,7 +64,7 @@ function Playlist({ userId }) {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h2 className="text-xl font-bold text-white">Your Playlists</h2>
 
-        {loggedInUser._id === userId && (
+        {loggedInUser && loggedInUser._id === userId && (
           <button
             onClick={() => setIsAddPlaylistClicked((prev) => !prev)}
             className="bg-blue-600 text-white px-4 py-2 rounded w-fit"
@@ -75,8 +75,8 @@ function Playlist({ userId }) {
       </div>
 
       {playlistData.length === 0 && (
-        <div className="mt-4 text-lg font-semibold text-gray-700 dark:text-gray-300">
-          <h1>No playlists found ...</h1>
+        <div className="mt-4 text-lg font-semibold text-gray-700 dark:text-gray-300 flex justify-center items-center">
+          <h1>No playlists found yet. Create a new one!</h1>
         </div>
       )}
 

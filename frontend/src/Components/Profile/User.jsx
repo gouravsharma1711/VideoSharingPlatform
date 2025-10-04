@@ -15,23 +15,33 @@ import useApi from "../../Hooks/useApi.js";
 
 const User = () => {
   const currentUser = useSelector((state) => state.user.userData);
+  const [isUserSubscribed,setIsUserSubscribed]=useState("");
   const { userName } = useParams();
 
   const { data: user, request: fetchUser, loading: userLoading } = useApi(UserObject.getUserProfile);
+
   const { data: videoData, request: fetchUserVideos, loading: videoLoading } = useApi(videos.getUserVideos);
 
   const [currentTab, setCurrentTab] = useState("UserVideos");
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
+  const [subScribersCount,setSubscribersCount]=useState(0);
+
   useEffect(() => {
     if (userName) {
-      fetchUser(userName);
+      const res=fetchUser(userName);
+      res.then(response=>{
+        setSubscribersCount(response.data.SubscribersCount)
+      })
+      
     }
   }, [userName, fetchUser]);
 
   useEffect(() => {
     if (user?._id) {
       fetchUserVideos(user._id);
+      console.log("user : ",user);
+      setIsUserSubscribed(user.isSubscribed);
     }
   }, [user?._id, fetchUserVideos]);
 
@@ -42,11 +52,19 @@ const User = () => {
   const EditProfileButtonHandler = () => {
     setIsEditProfileOpen((prev) => !prev);
   };
-  const isSubscribeHandler = async () => {
+  const isSubscribeHandler = async (userId) => {
     try {
-      const response = await subscriptionsService.toggleSubscription(user._id);
+      const response = await subscriptionsService.toggleSubscription(userId);
       if (response.statusCode === 200) {
         toast.success(`You have successfully ${response.message} to this channel`);
+        setIsUserSubscribed((prev)=>!prev);
+        console.log("random  : ",response);
+        if(response.data.subscribed){
+          setSubscribersCount(prev=>prev+1);
+        }else{
+          setSubscribersCount(prev=>prev-1);
+        }
+        
       } else {
         toast.error(`${response.message}`);
       }
@@ -89,19 +107,19 @@ const User = () => {
           <h1 className="text-3xl font-bold">{user?.fullName || ""}</h1>
           <p className="font-bold">@{user?.userName || ""}</p>
           <p className="text-sm font-bold mt-1">
-            {user?.SubscribersCount} Subscribers • {user?.subsribedToCount} Subscribed
+            {subScribersCount} Subscribers • {user?.subsribedToCount} Subscribed
           </p>
         </div>
         <div className="flex gap-3">
           <button
             className={`${
-              user?.isSubscribed
+              isUserSubscribed
                 ? "bg-white text-black hover:bg-gray-300"
                 : "bg-purple-500 text-white hover:bg-purple-600"
             } px-4 py-2 rounded-lg`}
-            onClick={isSubscribeHandler}
+            onClick={()=>isSubscribeHandler(user?._id)}
           >
-            {user?.isSubscribed ? "Subscribe" : "Unsubscribe"}
+            {isUserSubscribed ? "Unsubscribe" : "Subscribe"}
           </button>
           {currentUser?._id === user?._id && (
             <button

@@ -13,12 +13,12 @@ function SubscriptionCard({ item, onUnsubscribe, unsubscribing }) {
     `https://via.placeholder.com/64x64/3f3f46/d4d4d8?text=${item.userName?.charAt(0) || "U"}`;
 
   return (
-    <div className="flex items-center justify-between gap-4 rounded-xl border border-zinc-700 bg-zinc-800/40 p-4 hover:bg-zinc-800 transition-colors">
+    <div className="flex items-center justify-between gap-4 rounded-xl border border-slate-600 bg-slate-800 p-4 hover:bg-slate-700 transition-colors">
       <div className="flex items-center gap-4">
         <img
           src={item.avatar || placeholder}
           alt={item.userName}
-          className="w-14 h-14 rounded-full object-cover border border-zinc-700"
+          className="w-14 h-14 rounded-full object-cover border border-slate-600"
         />
         <div>
           <h3 className="text-white font-semibold">{item.userName || "Unknown User"}</h3>
@@ -44,22 +44,23 @@ function SubscriptionCard({ item, onUnsubscribe, unsubscribing }) {
  */
 function SearchBar({ value, onChange, onClear }) {
   return (
-    <div className="relative max-w-xl w-full mx-auto">
-      <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+    <div className="relative max-w-md mx-auto">
+      <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+        <i className="fa-solid fa-search text-gray-400"></i>
+      </div>
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Search channels..."
-        className="w-full pl-10 pr-10 py-2 rounded-lg bg-zinc-800/40 border border-zinc-700 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600 transition"
+        placeholder="Search subscriptions..."
+        className="w-full bg-slate-800 text-white placeholder-gray-400 border border-slate-600 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
       />
       {value ? (
         <button
           onClick={onClear}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200"
-          aria-label="Clear search"
+          className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-white"
         >
-          <i className="fa-solid fa-xmark"></i>
+          <i className="fa-solid fa-times"></i>
         </button>
       ) : null}
     </div>
@@ -123,7 +124,7 @@ function Subscriptions() {
           </header>
 
           {/* Combined Search and Content Block */}
-          <div className="bg-zinc-800/30 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-zinc-800 max-w-4xl mx-auto shadow-lg">
+          <div className="max-w-4xl mx-auto">
 
             {/* Search Bar */}
             <div className="mb-6">
@@ -159,18 +160,27 @@ function Subscriptions() {
                 ))}
               </div>
             ) : (
-              <div className="max-w-2xl mx-auto rounded-2xl p-12 text-center">
-                <div className="mx-auto mb-4 h-12 w-12 grid place-items-center rounded-full bg-zinc-900 border border-zinc-700">
-                  <i className="fa-regular fa-circle-user text-xl text-purple-300"></i>
+              <div className="text-center py-12">
+                <div className="max-w-md mx-auto">
+                  <i className="fa-solid fa-users text-6xl text-gray-600 mb-4"></i>
+                  <h3 className="text-xl font-semibold text-gray-300 mb-2">
+                    {searchTerm ? 'No matching subscriptions' : 'No subscriptions yet'}
+                  </h3>
+                  <p className="text-gray-500 mb-6">
+                    {searchTerm
+                      ? `No subscriptions found for "${searchTerm}"`
+                      : 'Subscribe to creators to see them here'
+                    }
+                  </p>
+                  {searchTerm && (
+                    <button
+                      onClick={() => setSearchTerm('')}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      Clear search
+                    </button>
+                  )}
                 </div>
-                <h3 className="text-xl font-semibold">
-                  {searchTerm ? "No matches found" : "No subscriptions yet"}
-                </h3>
-                <p className="mt-2 text-gray-400">
-                  {searchTerm
-                    ? "Try a different search term."
-                    : "Follow channels to see them here."}
-                </p>
               </div>
             )}
           </div>

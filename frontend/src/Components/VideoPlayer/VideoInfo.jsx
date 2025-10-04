@@ -1,12 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import getTimeAgo from "../../utils/getTimeAgo";
 import { toast } from "react-toastify";
 import like from "../../backendUtility/likes.utility";
+import { useSelector } from "react-redux";
 
-function VideoInfo({ videoData, setIsAddToPlaylistClicked,fetchVideo }) {
+function VideoInfo({ videoData, setIsAddToPlaylistClicked, fetchVideo }) {
+  const currentUser = useSelector((state) => state.user.userData);
+
   const [isLiked, setIsLiked] = useState(false);
-  const [isDisliked, setIsDisliked] = useState(false);
-  
+  const [prevState,setPrevState]=useState(isLiked);
+  const [likesCount, setLikesCount] = useState(0);
+
+  useEffect(() => {
+    setLikesCount(videoData?.likes || 0);
+
+    const fetchLikeStatus = async () => {
+      if (!currentUser || !videoData?._id) {
+        setIsLiked(false);
+        return;
+      }
+      try {
+        const response = await like.isLikedVideoByUser(
+          currentUser._id,
+          videoData._id
+        );
+        
+        setIsLiked(response.data.liked);
+      } catch (error) {
+        console.log("Failed to fetch like status:", error);
+      }
+    };
+
+    fetchLikeStatus();
+  }, [currentUser, videoData]);
+
   const shareHandler = () => {
     const currUrl = window.location.href;
     navigator.clipboard
@@ -16,123 +43,99 @@ function VideoInfo({ videoData, setIsAddToPlaylistClicked,fetchVideo }) {
   };
 
   const handleLike = async () => {
+    if (!currentUser) {
+      toast.info("Please login to perform this action");
+      return;
+    }
+
+    
+
     try {
-      // If disliked, remove it
-      if (isDisliked) {
-        setIsDisliked(false);
-      }
-
-      // Optimistic UI update
-      setIsLiked((prev) => !prev);
-
       const res = await like.toggleLike(videoData._id);
       
       if (res.statusCode === 200) {
-        toast.success(isLiked ? "Like removed" : "Liked!");
+        if(res.data.liked===true){
+          toast.success("you liked this video")
+        }else{
+          toast.success("you unliked this video")
+        }
+        setIsLiked(res.data.liked);
+        setPrevState(res.data.liked);
+        if (fetchVideo) fetchVideo();
       } else {
         throw new Error(res.message);
       }
-      fetchVideo();
     } catch (error) {
-      console.error(error);
-      toast.error("Error toggling like");
-      setIsLiked((prev) => !prev);
+      console.error("Error toggling like:", error);
+      toast.error("An error occurred. Please try again.");
+      // Revert the state if the API call fails
+      setIsLiked(previousLikeState);
+      setLikesCount((prev) => (previousLikeState ? prev + 1 : prev - 1));
     }
-  };
-
-  const handleDislike = () => {
-    // If liked, remove like and reduce count
-    if (isLiked) {
-      setIsLiked(false);
-      setLikesCount((prev) => prev - 1);
-    }
-    // Toggle dislike
-    setIsDisliked((prev) => !prev);
-    toast.success(`${isDisliked ? "Dislike removed" : "Disliked!"}`)
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      {/* Title + Stats */}
+    <div className="space-y-6">
       <div>
-        <h1 className="font-bold text-white leading-tight mb-2 sm:mb-3 text-lg sm:text-2xl md:text-3xl truncate">
-          {videoData.title}
+        <h1 className="font-bold text-slate-100 leading-tight mb-3 text-xl sm:text-2xl md:text-3xl">
+          {videoData?.title || "Video Title"}
         </h1>
 
         {/* Stats Row */}
-        <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-gray-400 text-xs sm:text-sm">
-          <div className="flex items-center gap-1 sm:gap-2">
-            <i className="fa-solid fa-eye text-purple-400"></i>
-            <span className="font-medium">{videoData.views}  views</span>
+        <div className="flex flex-wrap items-center gap-4 text-slate-400 text-sm">
+          <div className="flex items-center gap-2">
+            <i className="fa-solid fa-eye text-blue-400"></i>
+            <span className="font-medium">{videoData?.views || 0} views</span>
           </div>
-          <div className="flex items-center gap-1 sm:gap-2">
-            <i className="fa-solid fa-clock text-blue-400"></i>
-            <span>{getTimeAgo(videoData.createdAt)}</span>
+          <div className="flex items-center gap-2">
+            <i className="fa-solid fa-clock text-slate-500"></i>
+            <span>{getTimeAgo(videoData?.createdAt)}</span>
           </div>
-          <div className="flex items-center gap-1 sm:gap-2">
-            <i className="fa-solid fa-calendar text-green-400"></i>
+          <div className="flex items-center gap-2">
+            <i className="fa-solid fa-calendar text-slate-500"></i>
             <span>
-              {new Date(videoData.createdAt).toLocaleDateString("en-US", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
+              {videoData?.createdAt
+                ? new Date(videoData.createdAt).toLocaleDateString("en-US", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })
+                : "Date"}
             </span>
           </div>
         </div>
       </div>
 
       {/* Buttons */}
-      <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
-        {/* Like & Dislike */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <button
-            onClick={handleLike}
-            className={`group flex items-center gap-2 sm:gap-3 px-3 sm:px-6 py-2 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 hover:scale-105 border ${
-              isLiked
-                ? "bg-green-600/20 border-green-500/30"
-                : "bg-slate-700/50 border-gray-600/50 hover:bg-gradient-to-r hover:from-green-600/20 hover:to-emerald-600/20 hover:border-green-500/30"
-            }`}
-          >
-            <i
-              className={`fa-solid fa-thumbs-up ${
-                isLiked ? "text-green-500" : "text-green-400"
-              } group-hover:scale-110 transition-transform duration-200`}
-            ></i>
-            <span className="text-white">{videoData.likes}</span>
-          </button>
-
-          <button
-            onClick={handleDislike}
-            className={`group flex items-center gap-2 sm:gap-3 px-3 sm:px-6 py-2 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 hover:scale-105 border ${
-              isDisliked
-                ? "bg-red-600/20 border-red-500/30"
-                : "bg-slate-700/50 border-gray-600/50 hover:bg-gradient-to-r hover:from-red-600/20 hover:to-pink-600/20 hover:border-red-500/30"
-            }`}
-          >
-            <i
-              className={`fa-solid fa-thumbs-down ${
-                isDisliked ? "text-red-500" : "text-red-400"
-              } group-hover:scale-110 transition-transform duration-200`}
-            ></i>
-          </button>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+            <button
+              onClick={handleLike}
+              className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border ${
+                isLiked
+                  ? "bg-green-600 text-white border-green-600 hover:bg-green-700"
+                  : "bg-slate-700 text-slate-100 border-slate-600 hover:bg-slate-600"
+              }`}
+            >
+              <i className="fa-solid fa-thumbs-up"></i>
+              <span>{likesCount}</span>
+            </button>
         </div>
-
-        {/* Save & Share */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Save & Share Buttons */}
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setIsAddToPlaylistClicked((prev) => !prev)}
-            className="group flex items-center gap-2 sm:gap-3 bg-slate-700/50 hover:bg-gradient-to-r hover:from-blue-600/20 hover:to-purple-600/20 px-3 sm:px-6 py-2 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 hover:scale-105 border border-gray-600/50 hover:border-blue-500/30"
+            className="flex items-center gap-3 bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border border-slate-600"
           >
-            <i className="fa-solid fa-bookmark text-blue-400 group-hover:scale-110 transition-transform duration-200"></i>
-            <span className="text-white">Save</span>
+            <i className="fa-solid fa-bookmark text-blue-400"></i>
+            <span className="text-slate-100">Save</span>
           </button>
 
           <button
             onClick={shareHandler}
-            className="group bg-slate-700/50 hover:bg-gradient-to-r hover:from-purple-600/20 hover:to-pink-600/20 p-2 sm:p-3 rounded-xl transition-all duration-300 hover:scale-105 border border-gray-600/50 hover:border-purple-500/30"
+            className="bg-slate-700 hover:bg-slate-600 p-2 rounded-lg transition-all duration-300 hover:scale-105 border border-slate-600"
           >
-            <i className="fa-solid fa-share text-purple-400 group-hover:scale-110 transition-transform duration-200"></i>
+            <i className="fa-solid fa-share text-slate-400"></i>
           </button>
         </div>
       </div>
@@ -141,3 +144,14 @@ function VideoInfo({ videoData, setIsAddToPlaylistClicked,fetchVideo }) {
 }
 
 export default VideoInfo;
+
+
+
+
+
+
+
+
+
+
+

@@ -75,13 +75,13 @@ export default function SaveToPlaylistModal({ setIsAddToPlaylistClicked }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
-      <div className="bg-black text-white rounded-xl p-6 w-80 shadow-lg">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">Save To Playlist</h2>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50">
+      <div className="bg-slate-900 text-slate-100 rounded-xl p-6 w-80 border border-slate-700 shadow-xl">
+        <div className="flex justify-between items-center mb-6 ">
+          <h2 className="text-lg font-semibold text-slate-100">Save to Playlist</h2>
           <button
             onClick={() => setIsAddToPlaylistClicked(false)}
-            className="text-gray-400 hover:text-white"
+            className="text-slate-400 hover:text-slate-100 transition-colors"
           >
             ✕
           </button>
@@ -89,23 +89,25 @@ export default function SaveToPlaylistModal({ setIsAddToPlaylistClicked }) {
 
         {/* Conditional Rendering Block */}
         {loading ? (
-          <div className="text-center py-4">Loading playlists...</div>
+          <div className="text-center py-4 text-slate-400">Loading playlists...</div>
         ) : userPlaylists.length > 0 ? (
           <div className="space-y-3">
             {userPlaylists.map((pl) => (
-              <label key={pl._id} className="flex items-center gap-3 cursor-pointer">
+              <label key={pl._id} className="flex items-center gap-3 cursor-pointer hover:bg-slate-800 p-2 rounded-lg transition-colors">
                 <input
                   type="checkbox"
                   checked={pl.videos.includes(videoId)}
                   onChange={() => handleToggle(pl._id)}
-                  className="w-4 h-4 rounded accent-purple-500"
+                  className="w-4 h-4 rounded accent-blue-500"
                 />
-                <span>{pl.name}</span>
+                <span className="text-slate-200">{pl.name}</span>
               </label>
             ))}
+            
           </div>
+          
         ) : (
-          <div className="text-center py-4 text-gray-400">
+          <div className="text-center py-4 text-slate-400">
             You don't have any playlists yet.
           </div>
         )}

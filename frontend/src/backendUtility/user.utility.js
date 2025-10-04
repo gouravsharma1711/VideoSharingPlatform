@@ -165,7 +165,7 @@ class User {
     }
     async getAllUsers(){
         try{
-            const response= await axiosInstance.get('/users');
+            const response= await axiosInstance.get('/get-users');
             return response.data;
         }catch(error){
             console.error('Get all users error:',error);

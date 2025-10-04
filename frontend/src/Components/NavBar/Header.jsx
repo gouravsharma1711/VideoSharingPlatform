@@ -1,6 +1,7 @@
 import React from 'react';
 import ProfileMenu from './ProfileMenu/ProfileMenu.jsx';
 import SearchBar from './searchBar.jsx';
+import { Link } from 'react-router-dom';
 
 function Header({ toggleSidebar, isProfileMenuOpen, setProfileMenuOpen, isMobileSearchOpen, setMobileSearchOpen }) {
     return (
@@ -18,18 +19,20 @@ function Header({ toggleSidebar, isProfileMenuOpen, setProfileMenuOpen, isMobile
                             </svg>
                         </button>
                         <div className="flex items-center gap-3">
-                            <div className="relative">
+                            <Link to='/' className="relative">
                                 <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg blur opacity-75"></div>
                                 <img src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg" alt="Logo" className="relative h-8 w-8 rounded-lg" />
-                            </div>
-                            <span className="hidden sm:block text-white text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                            </Link>
+                            <Link
+                             className="hidden sm:block text-white text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent"
+                             to="/">
                                 VideoStream
-                            </span>
+                            </Link>
                         </div>
                     </div>
 
-                    <div className="hidden md:block flex-1 max-w-2xl mx-8">
-                        <SearchBar />
+                    <div className="hidden md:block flex-1 max-w-2xl mx-8 " id="searchInput">
+                        <SearchBar setMobileSearchOpen={setMobileSearchOpen} />
                     </div>
                     
                     <div className="flex items-center gap-4">
@@ -48,7 +51,7 @@ function Header({ toggleSidebar, isProfileMenuOpen, setProfileMenuOpen, isMobile
                 </div>
                 {isMobileSearchOpen && (
                     <div className="md:hidden pt-2 pb-4 border-t border-gray-700/50">
-                        <SearchBar />
+                        <SearchBar setMobileSearchOpen={setMobileSearchOpen} />
                     </div>
                 )}
             </div>

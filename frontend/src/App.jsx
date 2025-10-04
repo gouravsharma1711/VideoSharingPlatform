@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { loggedInUser, logOutUser } from "./Features/User/User.slice.js";
 import SearchResultPage from './Components/searchResult/SearchResultPage.jsx'
+import PageNotFound from './Components/pageNotFound/pageNotFound.jsx'
 
 function App() {
   const router = createBrowserRouter([
@@ -46,6 +47,9 @@ function App() {
       }
     ]
   },
+  { path: '*', element: <Layout/>, children:[
+    {path:'*',element:<PageNotFound/>}
+  ] }
 ]);
 
     const dispatch = useDispatch();

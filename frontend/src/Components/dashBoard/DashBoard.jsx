@@ -36,7 +36,7 @@ function Dashboard() {
     const intervalId = setInterval(() => {
       fetchStats();
       fetchVideos();
-    }, 30000); // refresh silently every 30s
+    }, 3000); 
 
     return () => clearInterval(intervalId);
   }, [fetchStats, fetchVideos]);

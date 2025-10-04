@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 export default function PlaylistVideoCard({ video }) {
 
   return (
-    <div className="flex items-center gap-4 bg-black border border-gray-700 rounded-lg overflow-hidden cursor-pointer hover:bg-gray-900 transition">
+    <div className="flex items-center gap-4 bg-slate-900 border border-slate-700 rounded-lg overflow-hidden cursor-pointer hover:bg-gray-900 transition">
       <img
         src={video.thumbnail}
         alt={video.title}

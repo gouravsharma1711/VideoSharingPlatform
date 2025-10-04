@@ -73,28 +73,30 @@ const SuggestedVideos = () => {
 
   };
   return (
-    <div className="bg-slate-800/30 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-4">
+    <div className="bg-slate-900 rounded-xl border border-slate-700 p-4">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-1 h-6 bg-gradient-to-b from-purple-500 to-blue-500 rounded-full"></div>
-        <h3 className="text-xl font-bold text-white">
-          <i className="fa-solid fa-play-circle mr-2 text-purple-400"></i>
-          Recommendation From User Account
+        <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+        <h3 className="text-xl font-bold text-slate-100">
+          <i className="fa-solid fa-play-circle mr-2 text-blue-400"></i>
+          Recommended Videos
         </h3>
       </div>
 
       <div
         ref={containerRef}
         onScroll={handleScroll}
-        className="space-y-4 max-h-[600px] uploadVideoClass overflow-y-auto custom-scrollbar"
+        className="space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar"
       >
         {data.map((video) => (
-          <div  onClick={()=> handleVideoClick(video._id)}  key={video._id}><SuggestedVideoCard video={video}  /></div>
+          <div onClick={() => handleVideoClick(video._id)} key={video._id}>
+            <SuggestedVideoCard video={video} />
+          </div>
         ))}
 
         {loading && <Loading size={20} />}
 
         {!hasMore && !loading && (
-          <p className="text-gray-400 text-xs text-center">No more videos</p>
+          <p className="text-slate-400 text-xs text-center">No more videos</p>
         )}
       </div>
     </div>

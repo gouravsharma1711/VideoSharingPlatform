@@ -8,19 +8,26 @@ import like from "../../../backendUtility/likes.utility";
 
 function CommentCard({ comment, FetchComment }) {
   const [isCommentLiked, setIsCommentLiked] = useState(false);
-  const [isDisliked, setIsDisliked] = useState(false);
+  const [prevIsCommentLiked,setPrevIsCommentLiked]=useState(isCommentLiked);
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
 
   const user = useSelector((state) => state.user.userData);
 
   const isCommentLikedByUser = async () => {
+
     try {
       const response = await like.isLikedCommentsByUser({
         userId: user?._id,
         commentId: comment?._id,
       });
-      setIsCommentLiked(response?.statusCode === 200 && response?.data?.liked);
+      if(response?.statusCode === 200 && response?.data?.liked){
+        setIsCommentLiked(true);
+        setPrevIsCommentLiked(true);
+      }else{
+        setPrevIsCommentLiked(false);
+        setIsCommentLiked(false);
+      }
     } catch (error) {
       setIsCommentLiked(false);
       console.log("Error in IsCommentLiked:", error);
@@ -56,11 +63,11 @@ function CommentCard({ comment, FetchComment }) {
   };
 
   const handleLike = async () => {
+    if(!user){
+      return toast.info("Please login to Like");
+      return;
+    }
     try {
-      setIsCommentLiked((prev) => {
-        if (!prev) setIsDisliked(false);
-        return !prev;
-      });
 
       const response = await Likes.toggleCommentLike(comment?._id);
 
@@ -74,10 +81,6 @@ function CommentCard({ comment, FetchComment }) {
     }
   };
 
-  const handleDislike = async () => {
-    setIsDisliked((prev) =>  !prev);
-    if(!isDisliked)toast.success("You disliked The comment");
-  };
 
   useEffect(() => {
     if (user?._id && comment?._id) {
@@ -124,7 +127,7 @@ function CommentCard({ comment, FetchComment }) {
               <button
                 onClick={handleLike}
                 className={`group flex items-center gap-2 text-sm transition-all duration-300 hover:scale-105 ${
-                  isCommentLiked
+                  prevIsCommentLiked
                     ? "text-green-400"
                     : "text-gray-400 hover:text-green-400"
                 }`}
@@ -133,24 +136,9 @@ function CommentCard({ comment, FetchComment }) {
                 <span className="font-medium">{comment.likesCount}</span>
               </button>
 
-              {/* DISLIKE BUTTON */}
-              <button
-                onClick={handleDislike}
-                className={`group text-sm transition-all duration-300 hover:scale-105 ${
-                  isDisliked
-                    ? "text-red-400"
-                    : "text-gray-400 hover:text-red-400"
-                }`}
-              >
-                <i
-                  className={`fa-solid fa-thumbs-down group-hover:scale-110 transition-transform duration-200 ${
-                    isDisliked ? "text-red-400" : ""
-                  }`}
-                ></i>
-              </button>
             </div>
 
-            {user._id === comment?.owner?._id && (
+            {user && user._id === comment?.owner?._id && (
               <div className="flex flex-row gap-2">
                 {!isEditing ? (
                   <>

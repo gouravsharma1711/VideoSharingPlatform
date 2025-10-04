@@ -36,6 +36,10 @@ const CommentsSection = () => {
   }, [videoId]);
 
   const handlePostComment = async (e) => {
+    if(!user){
+      toast.info('Please login first');
+      return;
+    }
     try {
       e.preventDefault();
       const text = commentReference.current.value.trim();
@@ -59,40 +63,36 @@ const CommentsSection = () => {
     <div className="space-y-6">
       {/* Title */}
       <div className="flex items-center gap-3">
-        <div className="w-1 h-6 bg-gradient-to-b from-purple-500 to-blue-500 rounded-full"></div>
-        <h2 className="text-xl font-bold text-white">
-          <i className="fa-solid fa-comments mr-2 text-purple-400"></i>
+        <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+        <h2 className="text-xl font-bold text-slate-100">
+          <i className="fa-solid fa-comments mr-2 text-blue-400"></i>
           {comments.length} Comments
         </h2>
       </div>
 
       {/* Add Comment */}
-      <div className="bg-slate-700/30 backdrop-blur-sm border border-gray-600/30 rounded-2xl p-6 space-y-4">
+      <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 space-y-4">
         <div className="flex items-start gap-4">
-          <div className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <img
-              src={user?.avatar}
-              alt="Your avatar"
-              className="relative w-10 h-10 rounded-full border-2 border-purple-500/30"
-            />
-          </div>
+          <img
+            src={user?.avatar || "https://cdn.pixabay.com/photo/2019/08/11/18/59/icon-4399701_1280.png"}
+            alt="Your avatar"
+            className="w-10 h-10 rounded-full border-2 border-slate-600"
+          />
           <div className="flex-1 space-y-3">
             <input
               type="text"
               placeholder="Add a comment..."
               ref={commentReference}
-              className="w-full bg-slate-600/50 border border-gray-600/50 rounded-xl py-3 px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300"
+              className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-4 text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
             />
             <button
               onClick={handlePostComment}
-              className="relative group overflow-hidden bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold py-2 px-6 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-all duration-300 hover:scale-105"
             >
-              <span className="relative z-10 flex items-center gap-2">
+              <span className="flex items-center gap-2">
                 <i className="fa-solid fa-paper-plane"></i>
                 Post Comment
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-700 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
           </div>
         </div>
@@ -110,7 +110,7 @@ const CommentsSection = () => {
         <div className="text-center">
           <button
             onClick={toggleView}
-            className="group flex items-center gap-2 mx-auto text-purple-400 hover:text-purple-300 transition-all duration-300 hover:scale-105"
+            className="flex items-center gap-2 mx-auto text-blue-400 hover:text-blue-300 transition-all duration-300 hover:scale-105"
           >
             <span className="font-medium">
               {isFullView
@@ -120,7 +120,7 @@ const CommentsSection = () => {
             <i
               className={`fa-solid ${
                 isFullView ? "fa-chevron-up" : "fa-chevron-down"
-              } group-hover:scale-110 transition-transform duration-200`}
+              } transition-transform duration-200`}
             ></i>
           </button>
         </div>

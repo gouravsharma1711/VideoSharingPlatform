@@ -10,7 +10,6 @@ function WatchHistory() {
 
     const [userHistory, setUserHistory] = useState([]);
     const [clearingHistory, setClearingHistory] = useState(false);
-    const userData = useSelector((state) => state.user.userData);
 
 
     const fetchHistory = async () => {

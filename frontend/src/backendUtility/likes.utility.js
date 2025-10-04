@@ -58,8 +58,10 @@ class Likes{
             
         }
     }
-    async isLikedVideoByUser({userId,videoId}){
+    async isLikedVideoByUser(userId,videoId){
         try {
+             console.log("userId : ",userId," type  : ",typeof userId);
+    console.log("videoId : ",videoId," type  : ",typeof videoId);
             const response = await axiosInstance.post('/isVideoLiked',{userId,videoId});
             return response.data;
         } catch (error) {
