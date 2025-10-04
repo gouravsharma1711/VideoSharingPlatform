@@ -193,6 +193,8 @@ const isCurrentUserLikedTheComment=asyncHandler(async(req,res)=>{
 
 const isCurrentUserLikedTheVideo=asyncHandler(async(req,res)=>{
     const {userId,videoId}=req.body;
+    console.log("userId : ",userId," type  : ",typeof userId);
+    console.log("videoId : ",videoId," type  : ",typeof videoId);
     
     const video = await Like.findOne({
         video: videoId,

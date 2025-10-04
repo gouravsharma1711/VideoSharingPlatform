@@ -56,7 +56,10 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
 })
 
 const getPlaylistById = asyncHandler(async (req, res) => {
+    console.log("getting request and the req.params : ",req.params);
+    
     const {playlistId} = req.params
+
     const playlist= await PlayList.aggregate([
         {
             $match:{

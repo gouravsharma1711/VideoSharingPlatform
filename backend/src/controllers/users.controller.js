@@ -665,9 +665,14 @@ const updateWatchHistory = asyncHandler(async (req, res) => {
 });
 
 const getAllUsers = asyncHandler(async (req, res) => {
-  let users = await User.find({}).select('-password -refreshToken -accessToken')
-
-  console.log("User : ",users);
+  let users = await User.aggregate([
+    {
+      $project:{
+        userName:1,
+        _id:0
+      }
+    }
+  ])
   
   if (!users || users.length === 0) {
     return res.status(200).json(new ApiResponse(200, 'No Users Found', []))

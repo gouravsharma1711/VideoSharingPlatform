@@ -4,7 +4,6 @@ import ApiError from '../utils/ApiError.js';
 import {Video,User,Comment,Like,PlayList} from '../models/index.js';
 import {uplordOnCloudinary,deleteFromCloudinary} from '../utils/cloudinary.js'
 import mongoose from 'mongoose';
-import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 
 const getCurrentUserVideos=asyncHandler(async(req,res)=>{
     const user=req.user;

@@ -17,7 +17,7 @@ const router = Router();
 
 router.post('/', auth,upload.none(),createPlaylist);
 router.get('/user/:userId', getUserPlaylists);
-router.get('/:playlistId',auth, getPlaylistById);
+router.get('/:playlistId', getPlaylistById);
 router.patch('/:playlistId/videos/:videoId', auth,addVideoToPlaylist);
 router.delete('/:playlistId/videos/:videoId',auth, removeVideoFromPlaylist);
 router.post('/:playlistId',upload.none(),auth, updatePlaylist);

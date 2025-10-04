@@ -6,10 +6,10 @@ import cookieParser from 'cookie-parser';
 const DataLimit="20kb";
 const allowedOrigins = process.env.CORS_ORIGIN.split(',');
 app.use(cors({
-     origin:allowedOrigins,
+    origin:allowedOrigins,
     methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE'],
     credentials: true,
-     maxAge: 24 * 60 * 60 * 1000,
+    maxAge: 24 * 60 * 60 * 1000,
 }))
 app.use(express.urlencoded({
     extended:true,
